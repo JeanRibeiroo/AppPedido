@@ -1,0 +1,77 @@
+unit ServerApp.Model.Pedido.Command.GetNumeroPedido;
+
+
+
+interface
+
+uses
+  FalconDep.Model.Command.Interfaces,
+  ServidorApp.Model.Fornecedor.Interfaces;
+
+
+Type
+
+  TModelCommnadCheckExistsFornecedor = class(TInterfacedObject, ICommand)
+    private
+      [weak]
+      FModel: IModelFornecedor;
+    public
+      constructor Create(aValue: IModelFornecedor);
+      destructor Destroy; override;
+      class function New(aValue: IModelFornecedor): ICommand;
+      function Execute : ICommand;
+  end;
+
+implementation
+
+uses
+  System.SysUtils,
+  System.JSON,
+  System.Generics.Collections,
+  ServidorAPI.Model.Exception,
+  ServidorApp.Model.Fornecedor.Fornecedor;
+
+
+
+{ TModelCommnadCheckExistsFornecedor }
+
+constructor TModelCommnadCheckExistsFornecedor.Create(aValue: IModelFornecedor);
+begin
+  FModel := aValue;
+end;
+
+destructor TModelCommnadCheckExistsFornecedor.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelCommnadCheckExistsFornecedor.Execute: ICommand;
+var lParams: TDictionary<string, string>;
+begin
+  Result := Self;
+  try
+    lParams := TDictionary<string, string>.Create;
+    lParams.Add('Razao', FModel.Entity.PessoaJuridica.Razao);
+    try
+      var lFornecedor := TModelFornecedor.New(FModel.DataSet, lParams).Get;
+      lFornecedor.Free;
+      raise Exception.Create('Esse Fornecedor já Existe.');
+    Except
+      On E:EEmpytQuery do
+        Exit;
+      on E: Exception do
+        Raise;
+    end;
+  finally
+    lParams.Free;
+  end;
+end;
+
+class function TModelCommnadCheckExistsFornecedor.New(aValue: IModelFornecedor): ICommand;
+begin
+  Result := Self.Create(aValue);
+end;
+
+end.
+

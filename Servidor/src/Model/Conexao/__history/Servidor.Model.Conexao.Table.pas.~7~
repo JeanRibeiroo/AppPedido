@@ -1,0 +1,41 @@
+unit Servidor.Model.Conexao.Table;
+
+interface
+
+uses Servidor.Model.Conexao.Interfaces, FireDAC.Comp.Client;
+
+Type
+  TModelConexaoTable = class(TInterfacedObject,IModelDataSet)
+  private
+    FTable:TFDTable;
+  public
+    constructor Create(Conexao:IModelConexao);
+    destructor  Destroy;override;
+    class function New(Conexao:IModelConexao):IModelDataSet;
+  end;
+
+implementation
+
+{ TModelConexaoTable }
+
+
+constructor TModelConexaoTable.Create(Conexao:IModelConexao);
+begin
+  FTable := TFDTable.Create(nil);
+  FTable.Connection := Conexao
+end;
+
+destructor TModelConexaoTable.Destroy;
+begin
+  FTable.Free;
+  inherited;
+end;
+
+
+class function TModelConexaoTable.New(Conexao:IModelConexao): IModelDataSet;
+begin
+  Result := Self.Create(Conexao);
+
+end;
+
+

@@ -1,0 +1,62 @@
+unit ServidorAPI.Controller.GerenciadorConexao;
+
+interface
+
+uses
+  ServidorAPI.Controller.Conexao.Interfaces, ServidorAPI.Model.Conexao.Interfaces,
+  System.Generics.Collections,Datasnap.DSSession,
+  ServidorAPI.Controller.Conexao.Factory.Conexoes,
+  ServidorAPI.Controller.ParametrosSistema.Interfaces;
+
+Type
+  TControllerGerenciadorConexao = class(TInterfacedObject,IControllerGerenciamentoConexao)
+  private
+     FListofConnection : TDictionary<Integer,IModelConexao>;
+     FParamConn:IParametrosSistema;
+  public
+    constructor Create(proxi:IParametrosSistema);
+    destructor  Destroy;override;
+    class function New(proxi:IParametrosSistema): IControllerGerenciamentoConexao;
+    function GetConnection:IModelConexao;
+  end;
+
+implementation
+
+{ TControllerGerenciadorConexao }
+
+
+
+constructor TControllerGerenciadorConexao.Create(proxi:IParametrosSistema);
+begin
+   FListofConnection := TDictionary<Integer,IModelConexao>.Create;
+   FParamConn := proxi;
+end;
+
+destructor TControllerGerenciadorConexao.Destroy;
+begin
+
+  inherited;
+end;
+
+function TControllerGerenciadorConexao.GetConnection: IModelConexao;
+var
+  FConexao: IModelConexao;
+begin
+  if FListofConnection.ContainsKey(TDSSessionManager.GetThreadSession.Id) then
+    begin
+      Result := FListofConnection[TDSSessionManager.GetThreadSession.Id];
+      Exit;
+    end;
+  FConexao := TControllerConexaoFactoryConexoes.New(FParamConn).Conexao;
+  FListofConnection.Add(TDSSessionManager.GetThreadSession.Id, FConexao);
+  Result := FConexao;
+
+end;
+
+class function TControllerGerenciadorConexao.New(proxi:IParametrosSistema): IControllerGerenciamentoConexao;
+begin
+  Result := Self.Create(proxi);
+
+end;
+
+end.

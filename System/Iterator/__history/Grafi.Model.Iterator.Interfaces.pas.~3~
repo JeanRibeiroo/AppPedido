@@ -1,0 +1,20 @@
+unit Grafi.Model.Iterator.Interfaces;
+
+interface
+
+uses
+  System.Generics.Collections;
+
+Type
+  IModelIterator<T> = Interface
+    ['{FE097161-68FF-4EBE-A58F-C92C66E4C629}']
+    function HasNext:Boolean;
+    function Next:IModelIterator<T>;
+    function AddLista(Value:TList<T>):IModelIterator<T>;
+    function Itens:IModelIterator<T>;
+    function Count:Integer;
+  End;
+
+implementation
+
+end.

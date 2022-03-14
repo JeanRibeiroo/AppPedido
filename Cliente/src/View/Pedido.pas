@@ -1,0 +1,302 @@
+unit Pedido;
+
+interface
+
+uses
+  System.SysUtils,
+  System.Types,
+  System.UITypes,
+  System.Classes,
+  System.Variants,
+  FMX.Types,
+  FMX.Controls,
+  FMX.Forms,
+  FMX.Graphics,
+  FMX.Dialogs,
+  FMX.ListView.Types,
+  FMX.ListView.Appearances,
+  FMX.ListView.Adapters.Base,
+  FMX.ListView,
+  FMX.Layouts,
+  FMX.Controls.Presentation,
+  FMX.StdCtrls,
+  FMX.ListBox,
+  FMX.Objects,
+  FMX.Edit,
+  App.Controller.Pedido.Pedido;
+
+type
+  TForm1 = class(TForm)
+    ListBox1: TListBox;
+    AddProduto: TButton;
+    EdtCodigo: TEdit;
+    EdtValorVenda: TEdit;
+    ESBProduto: TSearchEditButton;
+    Rectangle1: TRectangle;
+    Rectangle2: TRectangle;
+    EdtQtd: TEdit;
+    Layout1: TLayout;
+    EdtCodidoPedido: TEdit;
+    SEBPedido: TSearchEditButton;
+    EditCodigoClente: TEdit;
+    SEBCliente: TSearchEditButton;
+    LblValorTotal: TLabel;
+    Rectangle3: TRectangle;
+    Label2: TLabel;
+    LblDisplayNomeProduto: TLabel;
+    LblCliente: TLabel;
+    btnSalvar: TButton;
+    BtnNovo: TButton;
+    BtnCancelar: TButton;
+    procedure FormCreate(Sender: TObject);
+    procedure AddProdutoClick(Sender: TObject);
+    procedure SEBClienteClick(Sender: TObject);
+    procedure ESBProdutoClick(Sender: TObject);
+    procedure ListBox1KeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;Shift: TShiftState);
+    procedure SEBPedidoClick(Sender: TObject);
+    procedure btnSalvarClick(Sender: TObject);
+    procedure BtnNovoClick(Sender: TObject);
+    procedure BtnCancelarClick(Sender: TObject);
+  private
+    { Private declarations }
+    FPedido: IControllerPedido;
+    FModeInsert: Boolean;
+    procedure ModeInsert;
+    procedure ModeEdit;
+    procedure KeyDownReturn;
+    procedure KeyDownDelete;
+    procedure FieldsClear;
+    procedure FieldsPedidoClear;
+    procedure TotalDisplay(aValue: string);
+    procedure AtivaDesativaButton;
+  public
+    { Public declarations }
+  end;
+
+
+var
+  Form1: TForm1;
+
+implementation
+
+uses
+  System.JSON,
+  FMX.DialogService,
+  App.View.Components.ListItens.Factory,
+  App.View.Components.ListItens.Item001,
+  App.Model.Entity.Produto.Produto,
+  App.Controller.Produto.Produto,
+  App.Model.Entity.Pedido.PedidoProdutos,
+  App.Controller.Cliente.Cliente;
+
+
+
+{$R *.fmx}
+
+
+
+procedure TForm1.AddProdutoClick(Sender: TObject);
+begin
+   ModeInsert;
+   ModeEdit;
+   FieldsClear;
+end;
+
+procedure TForm1.AtivaDesativaButton;
+begin
+  BtnNovo.Enabled := not BtnNovo.Enabled;
+  btnSalvar.Enabled := not btnSalvar.Enabled;
+  BtnCancelar.Enabled := not BtnCancelar.Enabled;
+  AddProduto.Enabled := not AddProduto.Enabled;
+  SEBCliente.Enabled := not SEBCliente.Enabled;
+  SEBPedido.Enabled := not SEBPedido.Enabled;
+  ESBProduto.Enabled := not ESBProduto.Enabled;
+end;
+
+procedure TForm1.BtnCancelarClick(Sender: TObject);
+begin
+  AtivaDesativaButton;
+  FieldsClear;
+  FieldsPedidoClear;
+  ListBox1.Clear;
+end;
+
+procedure TForm1.BtnNovoClick(Sender: TObject);
+begin
+  FieldsClear;
+  FieldsPedidoClear;
+  AtivaDesativaButton;
+ // Fpedido := TControllerPedido.New;
+ // btnSalvar.Enabled := True;
+  //AddProduto.Enabled := True;
+ // SEBCliente.Enabled := True;
+ // SEBPedido.Enabled := False;
+end;
+
+procedure TForm1.btnSalvarClick(Sender: TObject);
+begin
+  FPedido.Salvar;
+  FieldsClear;
+  FieldsPedidoClear;
+  AtivaDesativaButton;
+end;
+
+procedure TForm1.ESBProdutoClick(Sender: TObject);
+begin
+  var lProduto := TControllerProduto.New;
+  lProduto.Entity.Codigo(EdtCodigo.Text.ToInteger);
+  lProduto.Get;
+  LblDisplayNomeProduto.Text := lProduto.Entity.Descricao;
+end;
+
+procedure TForm1.FieldsClear;
+begin
+  EdtCodigo.Text := EmptyStr;
+  EdtQtd.Text := EmptyStr;
+  EdtValorVenda.Text := EmptyStr;
+  EdtCodigo.SetFocus;
+end;
+
+procedure TForm1.FieldsPedidoClear;
+begin
+  ListBox1.Clear;
+  LblCliente.Text := EmptyStr;
+  LblValorTotal.Text := EmptyStr;
+  EdtCodidoPedido.Text := EmptyStr;
+  EditCodigoClente.Text := EmptyStr;
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+  FPedido := TControllerPedido.New;
+  FModeInsert := True;
+end;
+
+procedure TForm1.KeyDownDelete;
+begin
+  TDialogService.MessageDialog(('Esse Produto será Removido.'), system.UITypes.TMsgDlgType.mtConfirmation,
+  [system.UITypes.TMsgDlgBtn.mbYes, system.UITypes.TMsgDlgBtn.mbNo], system.UITypes.TMsgDlgBtn.mbYes,0,
+  procedure (const AResult: System.UITypes.TModalResult)
+  begin
+    case AResult of
+      mrYES:
+      begin
+         FPedido.Entity.IdPedidoProduto(TItem001(ListBox1.Selected).Id);
+         FPedido
+           .DeleteItemBd
+           .DeleteItemList
+           .ReturnOperacao(TotalDisplay)
+           .SomaValorTotal
+           .ShowGrid(ListBox1);
+      end;
+    end;
+  end
+  );
+end;
+
+procedure TForm1.KeyDownReturn;
+begin
+  var lId := TItem001(ListBox1.Selected).Id;
+  var lPedidoProduto :=
+    FPedido.GetPedidoProdutoList(lId);
+  FPedido.Entity.IdPedidoProduto(lId);
+
+  LblDisplayNomeProduto.Text := lPedidoProduto.Produto.Descricao;
+  EdtCodigo.Text :=  lPedidoProduto.Produto.Codigo.ToString;
+  EdtQtd.Text := lPedidoProduto.Quantidade.ToString;
+  EdtValorVenda.Text := FloatToStr(lPedidoProduto.ValorUnitario);
+  FModeInsert := False;
+
+end;
+
+procedure TForm1.ListBox1KeyDown(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  case Key of
+    vkReturn: KeyDownReturn;
+    vkDelete: KeyDownDelete;
+   // vkUp: ;
+   // vkDown: ;
+  end;
+
+end;
+
+procedure TForm1.ModeEdit;
+begin
+  if FModeInsert then
+    Exit;
+
+  FPedido
+    .EditItemList(
+        TEntityPedidoProdutos.New
+         .CodigoProduto(EdtCodigo.Text.ToInteger)
+         .Quantidade(EdtQtd.Text.ToInteger)
+         .ValorUnitario(EdtValorVenda.Text.ToDouble)
+         .Produto(
+           TEntityProduto.New
+             .Codigo(EdtCodigo.Text.ToInteger)
+             .Descricao(LblDisplayNomeProduto.Text)
+             .PrecoVenda(EdtValorVenda.Text.ToDouble)
+         )
+  )
+  .EditItemBd
+  .ReturnOperacao(TotalDisplay)
+  .SomaValorTotal
+  .ShowGrid(ListBox1);
+
+  FModeInsert := True;
+end;
+
+procedure TForm1.ModeInsert;
+begin
+  if not FModeInsert then
+    Exit;
+
+  FPedido
+     .AddProduto(
+       TEntityPedidoProdutos.New
+         .NumeroPedido(0)
+         .CodigoProduto(EdtCodigo.Text.ToInteger)
+         .Quantidade(EdtQtd.Text.ToInteger)
+         .ValorUnitario(EdtValorVenda.Text.ToDouble)
+         .Produto(
+           TEntityProduto.New
+             .Codigo(EdtCodigo.Text.ToInteger)
+             .Descricao(LblDisplayNomeProduto.Text)
+             .PrecoVenda(EdtValorVenda.Text.ToDouble)
+         )
+     )
+     .ReturnOperacao(TotalDisplay)
+     .SomaValorTotal
+     .ShowGrid(ListBox1);
+end;
+
+procedure TForm1.SEBClienteClick(Sender: TObject);
+begin
+  var lCliente := TControllerCliente.New;
+  lCliente.Entity.Codigo(EditCodigoClente.Text.ToInteger);
+  lCliente.Get;
+  LblCliente.Text :=  Format('Cliente: %s', [lCliente.Entity.Nome]);
+  FPedido.Entity.CodigoCliente(lCliente.Entity.Codigo);
+end;
+
+procedure TForm1.SEBPedidoClick(Sender: TObject);
+begin
+  FPedido := TControllerPedido.New;
+  FPedido.Entity.NumeroPedido(EdtCodidoPedido.Text.ToInteger);
+  FPedido
+    .GetPedido
+    .ReturnOperacao(TotalDisplay)
+    .SomaValorTotal
+    .ShowGrid(ListBox1);
+
+  LblCliente.Text := FPedido.Entity.Cliente.Nome;
+  AddProduto.Enabled := True;
+end;
+
+procedure TForm1.TotalDisplay(aValue: string);
+begin
+  LblValorTotal.Text := aValue;
+end;
+
+end.

@@ -1,0 +1,166 @@
+unit App.View.Components.ListItens.Item001;
+
+interface
+
+uses
+  FMX.ListBox,
+  FMX.Types,
+  System.SysUtils, FMX.StdCtrls, FMX.Objects;
+
+Type
+
+  IComponents<T> = Interface
+    ['{E8DD455E-0458-44A5-9B4C-AE1A0FA75AC4}']
+    function Component : TFmxObject;
+    function Container ( aValue : TFmxObject ) : IComponents<T>;
+    function This : T;
+  End;
+
+  TItem001 = class(TListBoxItem, IComponents<TItem001>)
+    private
+      FContainer: TFmxObject;
+      FOnExcluir: TProc<Integer>;
+      FPnlBackGround: TRectangle;
+      FSpeedBut: TSpeedButton;
+      FId: Integer;
+      FEntidade: string;
+      procedure OnEnterSpeedBut(Sender: TObject);
+      procedure OnLeaveSpeedBut(Sender: TObject);
+      procedure OnClickExcluir(Sender: TObject);
+      procedure SetPnlBackGround;
+      procedure SetSpeedBut;
+    public
+      function Component : TFmxObject;
+      function Container ( aValue : TFmxObject ) : IComponents<TItem001>;
+      function This : TItem001;
+      function OnExcluir(aValue: TProc<Integer>): TItem001;
+      function Id(aValue: Integer): TItem001; overload;
+      function Id: Integer; overload;
+      function Entidade(aValue:string): TItem001; overload;
+      function Entidade:string; overload;
+      function Title(aValue: string): TItem001;
+  end;
+
+
+
+implementation
+
+uses
+  FMX.Graphics,
+  System.UITypes,
+  FMX.Layouts,
+  App.View.Healpers.Img,
+  System.Types;
+
+{ TItem001 }
+
+function TItem001.Component: TFmxObject;
+var  but: TButton;
+     lLytBut: TLayout;
+     lImg: TImage;
+begin
+  //SetPnlBackGround;
+
+  lLytBut := TLayout.Create(Self);
+  lLytBut.Parent := Self;
+  lLytBut.Align := TAlignLayout.Right;
+  lLytBut.Height := Self.Height;
+  lLytBut.Width := Self.Height;
+  lLytBut.Padding.PaddingRect(TRectF.Create(4,4,4,4));
+
+  lImg := TImage.Create(lLytBut);
+  lImg.Parent := lLytBut;
+  lImg.Align := TAlignLayout.Client;
+  lImg.ResourceImage('Icon_excluir_24');
+  lImg.OnClick := OnClickExcluir;
+  //SetSpeedBut;
+  Self.Height := 30;
+
+
+  FContainer.AddObject(Self);
+end;
+
+function TItem001.Container(aValue: TFmxObject): IComponents<TItem001>;
+begin
+  Result := Self;
+  FContainer := aValue;
+end;
+
+function TItem001.Entidade: string;
+begin
+  Result := FEntidade;
+end;
+
+function TItem001.Entidade(aValue: string): TItem001;
+begin
+  Result := Self;
+  FEntidade := aValue;
+end;
+
+function TItem001.Id: Integer;
+begin
+  Result := FId;
+end;
+
+function TItem001.Id(aValue: Integer): TItem001;
+begin
+  Result := Self;
+  FId := aValue;
+end;
+
+procedure TItem001.OnClickExcluir(Sender: TObject);
+begin
+  if Assigned(FOnExcluir) then
+    FOnExcluir(FId);
+end;
+
+procedure TItem001.OnEnterSpeedBut(Sender: TObject);
+begin
+  FPnlBackGround.Opacity := 0.2;
+end;
+
+function TItem001.OnExcluir(aValue: TProc<Integer>): TItem001;
+begin
+  Result := Self;
+  FOnExcluir := aValue;
+end;
+
+procedure TItem001.OnLeaveSpeedBut(Sender: TObject);
+begin
+  FPnlBackGround.Opacity := 0;
+end;
+
+procedure TItem001.SetPnlBackGround;
+begin
+  FPnlBackGround := TRectangle.Create(Self);
+  FPnlBackGround.Parent := Self;
+  FPnlBackGround.Align := TAlignLayout.Contents;
+  FPnlBackGround.Fill.Color := TAlphaColors.Lightgray;
+  FPnlBackGround.Stroke.Kind := TBrushKind.None;
+  FPnlBackGround.Opacity := 0;
+  FPnlBackGround.SendToBack;
+end;
+
+procedure TItem001.SetSpeedBut;
+begin
+  FSpeedBut := TSpeedButton.Create(Self);
+  FSpeedBut.Parent := Self;
+  FSpeedBut.Align := TAlignLayout.Client;
+  FSpeedBut.BringToFront;
+  FSpeedBut.Opacity := 0;
+  FSpeedBut.OnMouseEnter :=  OnEnterSpeedBut;
+  FSpeedBut.OnMouseLeave :=  OnLeaveSpeedBut;
+end;
+
+function TItem001.This: TItem001;
+begin
+  Result := Self;
+end;
+
+function TItem001.Title(aValue: string): TItem001;
+begin
+  Result := Self;
+  Self.Text := aValue;
+end;
+
+end.

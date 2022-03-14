@@ -1,0 +1,63 @@
+unit Servidor.Controller.Conexao.Factory.Conexoes;
+
+interface
+
+uses
+  Servidor.Controller.Conexao.Interfaces,Servidor.Model.Conexao.Interfaces;
+
+
+Type
+  TControllerConexaoFactoryConexoes = class(TInterfacedObject,
+    IControllerConexaoFactoryConexoes)
+  private
+
+  public
+    constructor Create;
+    destructor Destroy; override;
+    class function New: IControllerConexaoFactoryConexoes;
+    function Conexao: IModelConexao;
+  end;
+
+implementation
+
+{ TControllerConexaoFactory.Conexoes }
+
+uses Servidor.Model.Conexao.Factory.Conexoes, System.SysUtils, Vcl.Forms,
+     Servidor.View.FPrincipal;
+
+
+function TControllerConexaoFactoryConexoes.Conexao: IModelConexao;
+begin
+  Result := TModelConexaoFactoryConexoes.New
+                                        .ConexaoFireDack
+                                        .ConexaoParametros
+                                        .DataBase(ParamConn.Conn.getDataBase)
+                                        .UserName('admin')
+                                        .PassoWord('vs@admin#2019')
+                                        .DriveId('MySQL')
+                                        .Server('localhost')
+                                        .DriverLink(ExtractFilePath(Application.ExeName) + 'libmysql.dll')
+                                        .Porta(3306)
+                                        .EndConexaoParametros
+                                        .Conectar;
+
+end;
+
+constructor TControllerConexaoFactoryConexoes.Create;
+begin
+
+end;
+
+destructor TControllerConexaoFactoryConexoes.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TControllerConexaoFactoryConexoes.New
+  : IControllerConexaoFactoryConexoes;
+begin
+  Result := Self.Create;
+end;
+
+end.

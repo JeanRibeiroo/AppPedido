@@ -1,0 +1,84 @@
+unit BackEnd.Controller.DAO.DAO;
+
+interface
+
+uses
+  BackEndGrafi.Model.DAO,
+  ServidorAPI.Controller.Conexao.Interfaces;
+
+Type
+
+  IControllerDAO = Interface
+    ['{C85ACBFD-1289-40D1-BC81-A71ED96EED7A}']
+    function Model: IDAOGeneric;
+    function StartTransaction: IControllerDAO;
+    function Commit: IControllerDAO;
+    function Rollback: IControllerDAO;
+  End;
+
+  TControllerDAO = class(TInterfacedObject, IControllerDAO)
+    private
+      FDAO : IDAOGeneric;
+      FConexao: IControllerConexao;
+      FIndexConn: Integer;
+    public
+      constructor Create;
+      destructor Destroy; override;
+      class function New: IControllerDAO;
+      function Model: IDAOGeneric;
+      function StartTransaction: IControllerDAO;
+      function Commit: IControllerDAO;
+      function Rollback: IControllerDAO;
+  End;
+
+
+implementation
+
+uses
+  ServidorAPI.Controller.Conexao.Factory;
+
+{ TControllerDAO }
+
+function TControllerDAO.Commit: IControllerDAO;
+begin
+  Result := Self;
+  FConexao.Commit;
+end;
+
+constructor TControllerDAO.Create;
+begin
+  FConexao := TControllerConexaoFactory.New.Conexao;
+  FIndexConn := FConexao.Conectar;
+  FDAO := TDAOGeneric.New(FConexao.Dataset);
+end;
+
+destructor TControllerDAO.Destroy;
+begin
+  if Assigned(FConexao) then
+    FConexao.Desconectar(FIndexConn);
+  inherited;
+end;
+
+function TControllerDAO.Model: IDAOGeneric;
+begin
+    Result := FDAO;
+end;
+
+class function TControllerDAO.New: IControllerDAO;
+begin
+  Result := Self.Create;
+end;
+
+function TControllerDAO.Rollback: IControllerDAO;
+begin
+  Result := Self;
+  FConexao.Rollback;
+end;
+
+function TControllerDAO.StartTransaction: IControllerDAO;
+begin
+  Result := Self;
+  FConexao.StartTransaction;
+end;
+
+end.

@@ -1,0 +1,63 @@
+unit ServerApp.Controller.Pedido.Pedido;
+
+interface
+
+uses
+  ServidorAPI.Model.Conexao.Interfaces,
+  System.JSON;
+
+Type
+
+  IModelPedido = Interface
+    ['{12E8CE4E-D43D-4CBD-B234-19840204C205}']
+    function Get(aIdPedido: Integer): TJSONObject;
+  End;
+
+  TModelPedido = class(TInterfacedObject, IModelPedido)
+    private
+      [weak]
+      FDataSet: IModelDataset;
+    public
+      constructor Create(aDataSet: IModelDataset);
+      destructor Destroy; override;
+      class function New(aDataSet: IModelDataset): IModelPedido;
+      function Get(aIdPedido: Integer): TJSONObject;
+  end;
+
+implementation
+
+uses
+  Server.Model.DAO, System.Classes;
+
+{ TModelPedido }
+
+constructor TModelPedido.Create(aDataSet: IModelDataset);
+begin
+  FDataSet := aDataSet;
+end;
+
+destructor TModelPedido.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelPedido.Get(aIdPedido: Integer): TJSONObject;
+begin
+  Result :=
+  TDAOGeneric.New(FDataSet)
+     .SQL
+       .Tabela('Pedido')
+       .Fields('idPedidoProduto, Quantidade, ValorUnitario, ValorTotal, CodigoProduto, NumeroPedido')
+       .Where('AND NumeroPedido = ' + aIdPedido.ToString )
+     .&End
+     .Select
+     .DataSetAsJsonObject;
+end;
+
+class function TModelPedido.New(aDataSet: IModelDataset): IModelPedido;
+begin
+  Result := Self.Create(aDataSet);
+end;
+
+end.

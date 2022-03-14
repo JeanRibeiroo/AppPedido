@@ -1,0 +1,33 @@
+program Teste;
+
+{$R *.dres}
+
+uses
+  System.StartUpCopy,
+  FMX.Forms,
+  Pedido in 'src\View\Pedido.pas' {Form1},
+  App.View.Components.ListItens.Item001 in 'src\View\Components\ListItens\App.View.Components.ListItens.Item001.pas',
+  App.View.Components.ListItens.Factory in 'src\View\Components\ListItens\App.View.Components.ListItens.Factory.pas',
+  App.View.Healpers.Img in 'src\View\Healpers\App.View.Healpers.Img.pas',
+  App.Model.Iterator.Interfaces in 'src\Model\Iterator\App.Model.Iterator.Interfaces.pas',
+  App.Model.Iterator.Iterator in 'src\Model\Iterator\App.Model.Iterator.Iterator.pas',
+  App.Model.Entity.Pedido.Pedido in 'src\Model\Entity\Pedido\App.Model.Entity.Pedido.Pedido.pas',
+  App.Model.Entity.Pedido.PedidoProdutos in 'src\Model\Entity\Pedido\App.Model.Entity.Pedido.PedidoProdutos.pas',
+  App.Model.Entity.Produto.Produto in 'src\Model\Entity\Produto\App.Model.Entity.Produto.Produto.pas',
+  App.Model.Entity.Cliente.Cliente in 'src\Model\Entity\Cliente\App.Model.Entity.Cliente.Cliente.pas',
+  App.Controller.Pedido.Pedido in 'src\Controller\Pedido\App.Controller.Pedido.Pedido.pas',
+  System.Thread.Interfaces in 'src\Model\Thread\System.Thread.Interfaces.pas',
+  System.Thread.Thread in 'src\Model\Thread\System.Thread.Thread.pas',
+  System.DAO.DAORest in 'src\Model\DAO\System.DAO.DAORest.pas',
+  System.DAO.Factory in 'src\Model\DAO\System.DAO.Factory.pas',
+  System.DAO.Interfaces in 'src\Model\DAO\System.DAO.Interfaces.pas',
+  System.DAO.Params in 'src\Model\DAO\System.DAO.Params.pas';
+
+{$R *.res}
+
+begin
+  ReportMemoryLeaksOnShutdown := True;
+  Application.Initialize;
+  Application.CreateForm(TForm1, Form1);
+  Application.Run;
+end.

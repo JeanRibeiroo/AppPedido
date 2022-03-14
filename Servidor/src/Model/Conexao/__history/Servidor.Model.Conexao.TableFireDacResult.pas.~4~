@@ -1,0 +1,46 @@
+unit Servidor.Model.Conexao.TableFireDacResult;
+
+interface
+
+uses Servidor.Model.Conexao.Interfaces;
+
+
+Type
+  TModelConexaoDataSetResult = class(TInterfacedObject,IModelResultDataSet)
+  private
+
+  public
+    constructor Create;
+    destructor  Destroy;override;
+    class function New:IModelResultDataSet;
+    function Get:Integer;
+  end;
+
+implementation
+
+{ TModelConexaoDataSetResult }
+
+
+constructor TModelConexaoDataSetResult.Create;
+begin
+
+end;
+
+destructor TModelConexaoDataSetResult.Destroy;
+begin
+
+  inherited;
+end;
+
+
+function TModelConexaoDataSetResult.Get: Integer;
+begin
+
+end;
+
+class function TModelConexaoDataSetResult.New: IModelResultDataSet;
+begin
+  Result := Self.Create;
+end;
+
+end.

@@ -1,0 +1,98 @@
+unit Grafi.Model.Entidade.Iterator.Iterator;
+
+
+interface
+
+uses
+  Grafi.Model.Entidade.Iterator.Interfaces,
+  System.Generics.Collections;
+
+Type
+  TModelEntidadeIterator<T: IInterface> = class(TInterfacedObject,IModelEntidadeIterator<T>)
+    private
+      FLista : TList<T>;
+      FCount:Integer;
+    public
+      constructor Create;
+      destructor  Destroy;override;
+      class function New:IModelEntidadeIterator<T>;
+      function HasNext:Boolean;
+      function Firt:IModelEntidadeIterator<T>;
+      function Next:T;
+      function Add(Value:T):IModelEntidadeIterator<T>;
+      function Itens:T;
+      function Count:Integer;
+      function Delete(aIndex: Integer): IModelEntidadeIterator<T>; overload;
+      function Delete: IModelEntidadeIterator<T>; overload;
+  end;
+
+implementation
+
+
+{ TModelIterator<T> }
+
+function TModelEntidadeIterator<T>.Add(Value: T): IModelEntidadeIterator<T>;
+begin
+  Result := Self;
+  FLista.Add(Value);
+  FCount := 0;
+end;
+
+function TModelEntidadeIterator<T>.Count: Integer;
+begin
+  Result := Pred(FLista.Count);
+end;
+
+constructor TModelEntidadeIterator<T>.Create;
+begin
+  FLista := TList<T>.Create;
+  FCount := 0;
+end;
+
+function TModelEntidadeIterator<T>.Delete(
+  aIndex: Integer): IModelEntidadeIterator<T>;
+begin
+  Result := self;
+  FLista.Delete(aIndex);
+end;
+
+function TModelEntidadeIterator<T>.Delete: IModelEntidadeIterator<T>;
+begin
+  Result := Self;
+  FLista.Delete(FCount);
+end;
+
+destructor TModelEntidadeIterator<T>.Destroy;
+begin
+  FLista.Free;
+  inherited;
+end;
+
+function TModelEntidadeIterator<T>.Firt: IModelEntidadeIterator<T>;
+begin
+  Result := self;
+  FCount := 0;
+end;
+
+function TModelEntidadeIterator<T>.HasNext: Boolean;
+begin
+  Result := not (FCount = FLista.Count);
+end;
+
+function TModelEntidadeIterator<T>.Itens: T;
+begin
+  Result := FLista[FCount];
+end;
+
+class function TModelEntidadeIterator<T>.New: IModelEntidadeIterator<T>;
+begin
+  Result := Self.Create;
+end;
+
+function TModelEntidadeIterator<T>.Next: T;
+begin
+  Result := FLista[FCount];
+  Inc(FCount);
+end;
+
+end.

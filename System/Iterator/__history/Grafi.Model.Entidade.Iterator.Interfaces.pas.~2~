@@ -1,0 +1,21 @@
+unit Grafi.Model.Entidade.Iterator.Interfaces;
+
+interface
+
+uses
+  System.Generics.Collections;
+
+Type
+  IModelIterator<T> = Interface
+    ['{FE097161-68FF-4EBE-A58F-C92C66E4C629}']
+    function HasNext:Boolean;
+    function Firt:IModelIterator<T>;
+    function Next:T;
+    function Add(Value:T):IModelIterator<T>;
+    function Itens:T;
+    function Count:Integer;
+  End;
+
+implementation
+
+end.

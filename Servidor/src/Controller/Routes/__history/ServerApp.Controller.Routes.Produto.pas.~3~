@@ -1,0 +1,47 @@
+unit ServerApp.Controller.Routes.Produto;
+
+
+
+interface
+
+uses
+  Horse.HTTP;
+
+
+procedure DoGetById(Req: THorseRequest; Res: THorseResponse);
+
+
+procedure Registry;
+
+implementation
+
+uses
+  System.JSON,
+  BackEnd.Controller.DAO.DAO, Horse;
+
+
+
+procedure DoGetById(Req: THorseRequest; Res: THorseResponse);
+begin
+  Res.Send<TJSONObject>(
+    TControllerDAO.New
+       .Model
+           .SQL
+             .Tabela('Produto')
+             .Fields('Codigo, Descricao, PrecoVendas')
+             .Where('AND Codigo = ' + Req.Params['IdProduto'] )
+           .&End
+           .Select
+           .DataSetAsJsonObject
+    );
+end;
+
+
+procedure Registry;
+begin
+   THorse
+    .Get('/produtos/:IdProduto',DoGetById);
+end;
+
+end.
+

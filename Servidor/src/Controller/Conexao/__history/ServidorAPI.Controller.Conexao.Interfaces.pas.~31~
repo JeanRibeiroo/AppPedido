@@ -1,0 +1,28 @@
+unit ServidorAPI.Controller.Conexao.Interfaces;
+
+interface
+
+uses
+  ServidorAPI.Model.Conexao.Interfaces;
+
+Type
+
+  IControllerConexao = Interface
+    ['{6548E891-EB8B-4BD8-B7EB-437CCD96E53A}']
+    function getParametrosConnIni:IModelConexaoParametros<IControllerConexao>;
+    function SetParametrosConnIni:IControllerConexao;
+    function Dataset: IModelDataSet;
+    function Conectar:IControllerConexao;
+    function IsConected:Boolean;
+  End;
+
+  IControllerConexaoFactory = interface
+    ['{94BF54D0-F0DF-450F-82AA-B470C76B87B6}']
+    function Conexao:IControllerConexao;
+  end;
+
+implementation
+
+
+
+end.

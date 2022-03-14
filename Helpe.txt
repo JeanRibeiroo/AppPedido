@@ -1,0 +1,13 @@
+Sistema em 3 camadas
+cliente e servidor
+
+Banco MYSQL
+admin root
+senha dev@Admin#2020
+
+arquivo de configuração de conexão ao banco no servidor
+ServidorAPI.Controller.Conexao.Conexao;
+função Conectar;
+linha 45;
+
+

@@ -1,0 +1,13 @@
+unit Servidor.Controller.Conexao.Interfaces;
+
+interface
+
+Type
+
+  IControllerConexao = interface
+
+  end;
+
+implementation
+
+end.

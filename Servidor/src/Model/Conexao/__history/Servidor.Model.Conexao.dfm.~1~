@@ -1,0 +1,27 @@
+object DataModule1: TDataModule1
+  OldCreateOrder = False
+  Height = 142
+  Width = 459
+  object FDPhysMySQLDriverLink1: TFDPhysMySQLDriverLink
+    VendorLib = 'C:\GP1Server\Server\Lib Mysql\libmysql.dll'
+    Left = 345
+    Top = 40
+  end
+  object FDGUIxWaitCursor1: TFDGUIxWaitCursor
+    Provider = 'Forms'
+    Left = 216
+    Top = 40
+  end
+  object Connection: TFDConnection
+    Params.Strings = (
+      'User_Name=SGP'
+      'Password=1310'
+      'Server=192.168.1.200'
+      'Database=SGP'
+      'DriverID=MySQL'
+      'Port=3306')
+    LoginPrompt = False
+    Left = 72
+    Top = 40
+  end
+end

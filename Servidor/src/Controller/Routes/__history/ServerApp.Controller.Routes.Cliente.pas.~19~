@@ -1,0 +1,39 @@
+unit ServerApp.Controller.Routes.Cliente;
+
+interface
+
+uses
+  Horse.HTTP;
+
+
+procedure DoGetById(Req: THorseRequest; Res: THorseResponse);
+
+
+procedure Registry;
+
+implementation
+
+uses
+  System.JSON,
+  BackEnd.Controller.DAO.DAO, Horse;
+
+
+
+procedure DoGetById(Req: THorseRequest; Res: THorseResponse);
+begin
+
+         Req.Params['IdCliente']
+
+  Res.Send<TJSONObject>(
+    
+    );
+end;
+
+
+procedure Registry;
+begin
+   THorse
+    .Get('/clientes/:IdCliente',DoGetById);
+end;
+
+end.

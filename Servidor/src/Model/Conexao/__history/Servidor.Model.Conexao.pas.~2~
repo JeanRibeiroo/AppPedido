@@ -1,0 +1,46 @@
+unit Servidor.Model.Conexao;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
+  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.MySQL,
+  FireDAC.Phys.MySQLDef, FireDAC.VCLUI.Wait, FireDAC.Comp.UI, Data.DB,
+  FireDAC.Comp.Client, Servidor.Model.Conexao.Interfaces;
+
+type
+  TDmConexao = class(TDataModule)
+    FDPhysMySQLDriverLink1: TFDPhysMySQLDriverLink;
+    FDGUIxWaitCursor1: TFDGUIxWaitCursor;
+    Connection: TFDConnection;
+  private
+    { Private declarations }
+    function Conn:TFDConnection;
+  public
+    { Public declarations }
+    class function New: IModelConexao;
+  end;
+
+var
+  DataModule1: TDmConexao;
+
+implementation
+
+{%CLASSGROUP 'Vcl.Controls.TControl'}
+
+{$R *.dfm}
+
+{ TDmConexao }
+
+function TDmConexao.Conn: TFDConnection;
+begin
+  Result := Connection;
+end;
+
+class function TDmConexao.New: IModelConexao;
+begin
+  Result := Self.Create(nil);
+end;
+
+end.

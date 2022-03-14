@@ -1,0 +1,50 @@
+unit Grafi.Model.DAO.Interfaces;
+
+interface
+
+uses
+  System.JSON,
+  Data.DB,
+  FireDAC.Comp.Client,
+  System.Classes;
+
+Type
+
+  IModelDAORest = Interface
+    ['{5B3E9667-D1C3-4654-98B3-C528CAB1A7DF}']
+    function BaseURL(aValue: string): IModelDAORest;
+    function Resource(aValue: string): IModelDAORest;
+    function Accept(aValue: string): IModelDAORest;
+    function ContentType(aValue: string): IModelDAORest;
+    function AddQueryParams(aParams, aValue: string): IModelDAORest;
+    function AddBody(aValue: TJSONObject): IModelDAORest; overload;
+    function AddBody(aValue: TStream): IModelDAORest; overload;
+    function BeginParams : IModelDAORest;
+    function AddParams(aParams, aValue: string): IModelDAORest;  overload;
+    function AddParams(aParams: string; aValue: Integer): IModelDAORest; overload;
+    function EndParams: IModelDAORest;
+    function AddToken(aValue: string) : IModelDAORest;
+    function AddFile(const AName: string; const AValue: TStream): IModelDAORest;
+    function Select: IModelDAORest;
+    function Post: IModelDAORest;
+    function Put: IModelDAORest;
+    function Delete: IModelDAORest;
+    function ToInt: Integer;
+    function ToJsonObject: TJSONObject;
+    function ToJsonArray: TJSONArray;
+    function ToJsonDataPaginateArray : TJSONArray; overload;
+    function ToJsonDataPaginateArray(out aRec : Integer) : TJSONArray; overload;
+    function ToDataSet: TDataSet;
+    function ToStream : TStream;
+  End;
+
+  IModelDAOFactory =  Interface
+    ['{B614192B-66BD-4224-9D50-1C6D3E33661B}']
+    function REST: IModelDAORest;
+  End;
+
+implementation
+
+end.
+
+

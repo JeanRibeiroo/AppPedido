@@ -1,0 +1,255 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 514
+  ClientWidth = 1000
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  DesignerMasterStyle = 0
+  object Rectangle1: TRectangle
+    Align = Bottom
+    Padding.Left = 15.000000000000000000
+    Padding.Top = 15.000000000000000000
+    Padding.Right = 15.000000000000000000
+    Padding.Bottom = 15.000000000000000000
+    Position.Y = 442.000000000000000000
+    Size.Width = 1000.000000000000000000
+    Size.Height = 72.000000000000000000
+    Size.PlatformDefault = False
+    Stroke.Kind = None
+    object LblValorTotal: TLabel
+      Align = Right
+      StyledSettings = [Family, Style]
+      Padding.Top = 15.000000000000000000
+      Position.X = 714.000000000000000000
+      Position.Y = 15.000000000000000000
+      Size.Width = 271.000000000000000000
+      Size.Height = 42.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 35.000000000000000000
+      TextSettings.FontColor = xFF404067
+      TextSettings.HorzAlign = Trailing
+      Text = 'R$ 00,00'
+      TabOrder = 0
+    end
+    object btnSalvar: TButton
+      Enabled = False
+      Position.X = 99.000000000000000000
+      Position.Y = 31.000000000000000000
+      Size.Width = 70.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 4
+      Text = 'Salvar'
+      OnClick = btnSalvarClick
+    end
+    object BtnDelete: TButton
+      Position.X = 177.000000000000000000
+      Position.Y = 31.000000000000000000
+      Size.Width = 81.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      Text = 'Excluir'
+      OnClick = AddProdutoClick
+    end
+    object BtnNovo: TButton
+      Position.X = 10.000000000000000000
+      Position.Y = 31.000000000000000000
+      Size.Width = 81.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'Novo'
+      OnClick = BtnNovoClick
+    end
+    object BtnCancelar: TButton
+      Enabled = False
+      Position.X = 266.000000000000000000
+      Position.Y = 31.000000000000000000
+      Size.Width = 81.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      Text = 'Canselar'
+      OnClick = BtnCancelarClick
+    end
+  end
+  object Rectangle2: TRectangle
+    Align = Top
+    Position.Y = 34.000000000000000000
+    Size.Width = 1000.000000000000000000
+    Size.Height = 102.000000000000000000
+    Size.PlatformDefault = False
+    Stroke.Kind = None
+    object EdtCodidoPedido: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 3
+      Position.X = 32.000000000000000000
+      Position.Y = 24.000000000000000000
+      Size.Width = 163.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+      TextPrompt = 'N. Pedido'
+      object SEBPedido: TSearchEditButton
+        CanFocus = False
+        Cursor = crArrow
+        Size.Width = 28.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        OnClick = SEBPedidoClick
+      end
+    end
+    object EditCodigoClente: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 6
+      Position.X = 32.000000000000000000
+      Position.Y = 56.000000000000000000
+      Size.Width = 113.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TextPrompt = 'Codigo'
+      object SEBCliente: TSearchEditButton
+        CanFocus = False
+        Cursor = crArrow
+        Enabled = False
+        Size.Width = 28.000000000000000000
+        Size.Height = 18.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        OnClick = SEBClienteClick
+      end
+    end
+    object LblCliente: TLabel
+      StyledSettings = [Family, Style]
+      Position.X = 597.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 392.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 18.000000000000000000
+      TextSettings.FontColor = xFF3A3535
+      TextSettings.HorzAlign = Trailing
+      Text = 'CLiente:'
+      TabOrder = 7
+    end
+  end
+  object Layout1: TLayout
+    Align = Client
+    Padding.Left = 5.000000000000000000
+    Padding.Top = 5.000000000000000000
+    Padding.Right = 5.000000000000000000
+    Padding.Bottom = 5.000000000000000000
+    Size.Width = 1000.000000000000000000
+    Size.Height = 306.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    object ListBox1: TListBox
+      Align = Bottom
+      Position.X = 5.000000000000000000
+      Position.Y = 80.000000000000000000
+      Size.Width = 990.000000000000000000
+      Size.Height = 221.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      DisableFocusEffect = True
+      DefaultItemStyles.ItemStyle = ''
+      DefaultItemStyles.GroupHeaderStyle = ''
+      DefaultItemStyles.GroupFooterStyle = ''
+      OnKeyDown = ListBox1KeyDown
+      Viewport.Width = 986.000000000000000000
+      Viewport.Height = 217.000000000000000000
+    end
+    object AddProduto: TButton
+      Enabled = False
+      Position.X = 911.000000000000000000
+      Position.Y = 50.000000000000000000
+      TabOrder = 2
+      Text = 'Add'
+      OnClick = AddProdutoClick
+    end
+    object EdtCodigo: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 3
+      Position.X = 590.000000000000000000
+      Position.Y = 50.000000000000000000
+      Size.Width = 116.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TextPrompt = 'Codigo'
+      object ESBProduto: TSearchEditButton
+        CanFocus = False
+        Cursor = crArrow
+        Enabled = False
+        Size.Width = 28.000000000000000000
+        Size.Height = 18.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        OnClick = ESBProdutoClick
+      end
+    end
+    object EdtValorVenda: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 5
+      Position.X = 799.000000000000000000
+      Position.Y = 50.000000000000000000
+      Size.Width = 104.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TextPrompt = 'Valor'
+    end
+    object EdtQtd: TEdit
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      TabOrder = 6
+      Position.X = 714.000000000000000000
+      Position.Y = 50.000000000000000000
+      Size.Width = 77.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      TextPrompt = 'Quantidade'
+    end
+    object LblDisplayNomeProduto: TLabel
+      Align = Left
+      StyledSettings = [Family, Style]
+      Padding.Top = 15.000000000000000000
+      Position.X = 5.000000000000000000
+      Position.Y = 5.000000000000000000
+      Size.Width = 564.000000000000000000
+      Size.Height = 75.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 26.000000000000000000
+      TextSettings.FontColor = xFF404067
+      TextSettings.VertAlign = Leading
+      Text = '. . .'
+      TabOrder = 0
+    end
+  end
+  object Rectangle3: TRectangle
+    Align = Top
+    Fill.Color = xFF5D6779
+    Size.Width = 1000.000000000000000000
+    Size.Height = 34.000000000000000000
+    Size.PlatformDefault = False
+    Stroke.Kind = None
+    object Label2: TLabel
+      Align = Left
+      StyledSettings = [Family, Style]
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 4.000000000000000000
+      Margins.Bottom = 4.000000000000000000
+      Position.X = 10.000000000000000000
+      Position.Y = 4.000000000000000000
+      Size.Width = 295.000000000000000000
+      Size.Height = 26.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 18.000000000000000000
+      TextSettings.FontColor = xFFEFEFEF
+      Text = 'App Pedidos'
+      TabOrder = 0
+    end
+  end
+end

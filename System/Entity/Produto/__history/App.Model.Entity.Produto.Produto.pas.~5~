@@ -1,0 +1,19 @@
+unit App.Model.Entity.Produto.Produto;
+
+interface
+
+Type
+
+   IEntityProduto = Interface
+     ['{64F82ADB-15EE-48FE-A35B-C38CDD19019B}']
+     function Codigo(aValue: Integer): IEntityProduto; overload;
+     function Codigo: Integer; overload;
+     function Descricao(aValue: string): IEntityProduto; overload;
+     function Descricao: string; overload;
+     function PrecoVenda(aValue: Currency): IEntityProduto; overload;
+     function PrecoVenda: Currency; overload;
+   End;
+
+implementation
+
+end.

@@ -1,0 +1,330 @@
+unit System.DAO.DAORest;
+
+interface
+
+uses
+  System.JSON,
+  Data.DB,
+  System.DAO.Interfaces,
+  RESTRequest4D,
+  System.Classes,
+  FireDAC.Stan.Intf,
+  FireDAC.Stan.Option,
+  FireDAC.Stan.Param,
+  FireDAC.Stan.Error,
+  FireDAC.DatS,
+  FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf,
+  FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client, System.DAO.Params;
+
+Type
+
+  TDAORest = class(TInterfacedObject,IDAORest)
+    private
+      FBaseURL: string;
+      FResource: string;
+      FContent: string;
+      FStreamValue : TMemoryStream;
+      FBory : string;
+      FJsonObject: TJSONObject;
+      FJsonArray: TJSONArray;
+      FDataSet: TDataSet;
+      FRequest: IRequest;
+      FResponse: IResponse;
+      procedure GetError(aCode: IResponse);
+    public
+      constructor Create;
+      destructor  Destroy; override;
+      class function New: IDAORest;
+      function BaseURL(aValue: string): IDAORest;
+      function Resource(aValue: string): IDAORest;
+      function Accept(aValue: string): IDAORest;
+      function ContentType(aValue: string): IDAORest;
+      function AddQueryParams(aParams, aValue: string): IDAORest; overload;
+      function AddQueryParams(aValue: IParams): IDAORest; overload;
+      function AddBody(aValue: TJSONObject): IDAORest; overload;
+      function AddBody(aValue: TStream): IDAORest; overload;
+      function Params(aValue: IParams): IDAORest;
+      function BeginParams : IDAORest;
+      function AddParams(aParams, aValue: string): IDAORest;  overload;
+      function AddParams(aParams: string; aValue: Integer): IDAORest; overload;
+      function EndParams: IDAORest;
+      function AddToken(aValue: string) : IDAORest;
+      function AddFile(const AName: string; const AValue: TStream): IDAORest;
+      function Select: IDAORest;
+      function Post: IDAORest;
+      function Put: IDAORest;
+      function Delete: IDAORest;
+      function ToInt: Integer;
+      function ToJsonObject: TJSONObject;
+      function ToJsonArray: TJSONArray;
+      function ToJsonDataPaginateArray : TJSONArray; overload;
+      function ToJsonDataPaginateArray(out aRec : Integer) : TJSONArray; overload;
+      function ToDataSet: TFDMemTable;
+      function ToStream : TStream;
+  end;
+
+implementation
+
+uses
+  LocalCache4D,
+  System.SysUtils,
+  DataSet.Serialize,
+  System.Generics.Collections;
+
+{ TDAORest }
+
+function TDAORest.Accept(aValue: string): IDAORest;
+begin
+  Result := Self;
+  FRequest.Accept(aValue);
+end;
+
+function TDAORest.AddBody(aValue: TJsonObject): IDAORest;
+begin
+  Result := Self;
+  FRequest.AddBody(aValue);
+end;
+
+function TDAORest.AddBody(aValue: TStream): IDAORest;
+begin
+  Result := Self;
+  FRequest.AddBody(aValue);
+end;
+
+function TDAORest.AddFile(const AName: string; const AValue: TStream): IDAORest;
+begin
+  Result := Self;
+  FRequest.AddFile(AName,AValue);
+end;
+
+function TDAORest.AddParams(aParams: string; aValue: Integer): IDAORest;
+begin
+  Result := Self;
+  FJsonObject.AddPair(TJSONPair.Create(aParams, TJSONNumber.Create(aValue)));
+end;
+
+function TDAORest.AddQueryParams(aValue: IParams): IDAORest;
+var LPar: TPair<string, string>;
+begin
+  Result := Self;
+  FRequest.ClearParams;
+  for LPar in aValue.List do
+    if not LPar.Value.IsEmpty then
+      FRequest.AddParam(LPar.Key, LPar.Value);
+end;
+
+function TDAORest.AddParams(aParams, aValue: string): IDAORest;
+begin
+  Result := Self;
+  FJsonObject.AddPair(TJSONPair.Create(aParams, TJSONString.Create(aValue)));
+end;
+
+function TDAORest.AddQueryParams(aParams, aValue: string): IDAORest;
+begin
+  Result := Self;
+  if not aValue.IsEmpty then
+    FRequest.AddParam(aParams, aValue);
+end;
+
+function TDAORest.AddToken(aValue: string): IDAORest;
+begin
+  Result := Self;
+  FRequest.Token(aValue);
+end;
+
+function TDAORest.BaseURL(aValue: string): IDAORest;
+begin
+  Result := Self;
+  FBaseURL := aValue;
+end;
+
+function TDAORest.BeginParams: IDAORest;
+begin
+  Result := Self;
+  if not Assigned(FJsonObject) then
+     FJsonObject := TJSONObject.Create;
+end;
+
+function TDAORest.ContentType(aValue: string): IDAORest;
+begin
+  Result := Self;
+  FRequest.ContentType(aValue);
+end;
+
+constructor TDAORest.Create;
+begin
+  FJsonObject := nil;
+  FJsonArray := nil;
+  FJsonObject := nil;
+  FRequest := TRequest.New;
+  FRequest.RaiseExceptionOn500(false);
+  FRequest.UserAgent(Format('%s %s', [SYS_APLICATION_NOME, SYS_LOGIN]));
+end;
+
+function TDAORest.Delete: IDAORest;
+var LResult: IResponse;
+begin
+  Result := Self;
+  LResult :=
+  FRequest
+      .BaseURL(FBaseURL + FResource)
+    .Delete;
+  GetError(LResult);
+end;
+
+destructor TDAORest.Destroy;
+begin
+  if Assigned(FStreamValue) then
+    FreeAndNil(FStreamValue);
+  inherited;
+end;
+
+function TDAORest.EndParams: IDAORest;
+begin
+  Result := Self;
+  FRequest.AddBody(FJsonObject);
+end;
+
+procedure TDAORest.GetError(aCode: IResponse);
+var LDescription: string;
+begin
+  if aCode.StatusCode > 399 then
+  begin
+    TJSONObject(aCode.JSONValue).TryGetValue<string>('description', LDescription);
+    raise Exception.Create(LDescription);
+  end;
+end;
+
+class function TDAORest.New: IDAORest;
+begin
+  Result := Self.Create;
+end;
+
+function TDAORest.Post: IDAORest;
+var LResult: IResponse;
+begin
+  Result := Self;
+  LResult :=
+    FRequest
+        .BaseURL(FBaseURL + FResource)
+      .Post;
+  GetError(LResult);
+  FContent := LResult.Content;
+end;
+
+function TDAORest.Put: IDAORest;
+var LResult: IResponse;
+begin
+  Result := Self;
+  LResult :=
+     FRequest
+        .BaseURL(FBaseURL + FResource)
+      .Put;
+  GetError(LResult);
+  FContent := LResult.Content;
+end;
+
+function TDAORest.Params(aValue: IParams): IDAORest;
+var LPar: TPair<string, string>;
+begin
+  Result := Self;
+  Self.BeginParams;
+    for LPar in aValue.List do
+    begin
+      Self.AddParams(LPar.Key, LPar.Value);
+    end;
+  Self.EndParams;
+end;
+
+function TDAORest.Resource(aValue: string): IDAORest;
+begin
+  Result := Self;
+  FResource := aValue;
+end;
+
+function TDAORest.Select: IDAORest;
+//var ateste:string;
+begin
+  Result := Self;
+//  ateste := FBaseURL + FResource + FRequest.FullRequestURL;
+  FResponse :=
+    FRequest
+      .BaseURL(FBaseURL + FResource)
+      .Get;
+  GetError(FResponse);
+
+  FContent := FResponse.Content;
+end;
+
+function TDAORest.ToDataSet: TFDMemTable;
+var LJsonResult: TJSONObject;
+begin
+  LJsonResult := TJSONObject.ParseJSONValue(FContent) as TJSONObject;
+
+  Result := TFDMemTable.Create(nil);
+  try
+    Result.LoadFromJSON(LJsonResult.GetValue<TJSONArray>('data').Clone as TJSONArray);
+    Result.Open;
+  finally
+    LJsonResult.free;
+  end;
+end;
+
+function TDAORest.ToInt: Integer;
+var LJsonResult: TJSONObject;
+begin
+  LJsonResult := TJSONObject.ParseJSONValue(FContent) as TJsonObject;
+  try
+      Result :=  LJsonResult.GetValue<Integer>('id');
+  finally
+    if Assigned(LJsonResult) then
+      LJsonResult.Free;
+  end;
+end;
+
+function TDAORest.ToJsonArray: TJSONArray;
+begin
+  Result := TJSONObject.ParseJSONValue(FContent) as TJSONArray;
+end;
+
+function TDAORest.ToJsonDataPaginateArray: TJSONArray;
+var LJsonResult: TJSONObject;
+begin
+  Result := nil;
+  try
+   LJsonResult := TJSONObject.ParseJSONValue(FContent) as TJSONObject;
+   Result := LJsonResult.GetValue<TJSONArray>('data').Clone as TJSONArray ;
+  finally
+    LJsonResult.Free;
+  end;
+
+end;
+
+function TDAORest.ToJsonDataPaginateArray(out aRec : Integer) : TJSONArray;
+var LJsonResult: TJSONObject;
+begin
+  Result := nil;
+  try
+   LJsonResult := TJSONObject.ParseJSONValue(FContent) as TJSONObject;
+   aRec :=  LJsonResult.GetValue<Integer>('records');
+   Result := LJsonResult.GetValue<TJSONArray>('data').Clone as TJSONArray ;
+  finally
+    LJsonResult.Free;
+  end;
+end;
+
+function TDAORest.ToJsonObject: TJSONObject;
+begin
+  Result := TJSONObject.ParseJSONValue(FContent) as TJsonObject;
+end;
+
+function TDAORest.ToStream: TStream;
+begin
+ FStreamValue := TMemoryStream.Create;
+ FStreamValue.CopyFrom(FResponse.ContentStream, 0);
+ Result := FStreamValue;
+end;
+
+end.

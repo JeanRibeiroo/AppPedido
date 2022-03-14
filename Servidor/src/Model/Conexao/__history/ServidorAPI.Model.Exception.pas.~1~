@@ -1,0 +1,7 @@
+unit ServidorAPI.Model.Exception;
+
+interface
+
+implementation
+
+end.

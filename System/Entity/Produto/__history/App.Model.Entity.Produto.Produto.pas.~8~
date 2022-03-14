@@ -1,0 +1,81 @@
+unit App.Model.Entity.Produto.Produto;
+
+interface
+
+Type
+
+   IEntityProduto = Interface
+     ['{64F82ADB-15EE-48FE-A35B-C38CDD19019B}']
+     function Codigo(aValue: Integer): IEntityProduto; overload;
+     function Codigo: Integer; overload;
+     function Descricao(aValue: string): IEntityProduto; overload;
+     function Descricao: string; overload;
+     function PrecoVenda(aValue: Currency): IEntityProduto; overload;
+     function PrecoVenda: Currency; overload;
+   End;
+
+   TEntityProduto = class(TInterfacedObject, TEntityProduto)
+     private
+     public
+       constructor Create;
+       destructor Destroy; override;
+       class function New: TEntityProduto;
+       function Codigo(aValue: Integer): IEntityProduto; overload;
+       function Codigo: Integer; overload;
+       function Descricao(aValue: string): IEntityProduto; overload;
+       function Descricao: string; overload;
+       function PrecoVenda(aValue: Currency): IEntityProduto; overload;
+       function PrecoVenda: Currency; overload;
+   end;
+
+implementation
+
+{ TEntityProduto }
+
+function TEntityProduto.Codigo(aValue: Integer): IEntityProduto;
+begin
+
+end;
+
+function TEntityProduto.Codigo: Integer;
+begin
+
+end;
+
+constructor TEntityProduto.Create;
+begin
+
+end;
+
+function TEntityProduto.Descricao: string;
+begin
+
+end;
+
+function TEntityProduto.Descricao(aValue: string): IEntityProduto;
+begin
+
+end;
+
+destructor TEntityProduto.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TEntityProduto.New: TEntityProduto;
+begin
+  Result := Self.Create;
+end;
+
+function TEntityProduto.PrecoVenda(aValue: Currency): IEntityProduto;
+begin
+
+end;
+
+function TEntityProduto.PrecoVenda: Currency;
+begin
+
+end;
+
+end.

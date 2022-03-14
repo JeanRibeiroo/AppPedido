@@ -1,0 +1,7 @@
+unit ServerApp.Model.Cliente.Clientepas;
+
+interface
+
+implementation
+
+end.

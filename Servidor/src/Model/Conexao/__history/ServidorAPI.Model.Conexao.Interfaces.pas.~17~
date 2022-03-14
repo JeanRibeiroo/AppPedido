@@ -1,0 +1,59 @@
+unit ServidorAPI.Model.Conexao.Interfaces;
+
+interface
+
+uses
+  FireDAC.Comp.Client, System.Classes;
+
+Type
+  IModelConexaoParametros = interface;
+
+  IModelConexao = interface
+    ['{D29750E7-384A-48E7-B9BA-FE391249CAB3}']
+    function Conectar:IModelConexao;
+    function IsConected:Boolean;
+    function &EndConexao: TComponent;
+    function Parametros: IModelConexaoParametros;
+  end;
+
+  IModelConexaoParametros = interface
+    ['{0ADB6870-009F-4C07-AD4C-B96D19F35911}']
+    function DataBase(Value: string): IModelConexaoParametros;
+    function UserName(Value: string): IModelConexaoParametros;
+    function PassWord(Value: string): IModelConexaoParametros;
+    function DriveId(Value: string): IModelConexaoParametros;
+    function Server(Value: string): IModelConexaoParametros;
+    function DriverLink(Value: string): IModelConexaoParametros;
+    function Porta(Value: string): IModelConexaoParametros;
+    function getDataBase:String;
+    function getUserName:String;
+    function getPassword:String;
+    function getServer:String;
+    function getDriverID:String;
+    function getPorta:String;
+    function getDriverLink:string;
+  end;
+
+
+  IModelDataSet = interface
+    ['{E491B3ED-65CB-4276-8EAD-9DDEF465B9BF}']
+    function Open(ASQL: string): IModelDataSet;
+    function Exec(ASQL: string): IModelDataSet;
+    function getLinhasAfetadas:Integer;
+    function &EndDataSet: TComponent;
+  end;
+
+
+  IModelConexaoFactoryConexoes = interface
+    ['{00BC9287-25B6-41DF-9CB1-833079E228E4}']
+    function ConexaoFireDack: IModelConexao;
+  end;
+
+  IModelConexaoFactoryDataSet = interface
+    ['{0ACC12C8-EE00-4011-9F07-CB78DD993A21}']
+    function DataSetFireDack(Conexao:IModelConexao):IModelDataSet;
+  end;
+
+implementation
+
+end.

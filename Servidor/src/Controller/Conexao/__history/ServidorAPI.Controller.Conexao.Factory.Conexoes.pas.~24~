@@ -1,0 +1,54 @@
+unit ServidorAPI.Controller.Conexao.Factory.Conexoes;
+
+interface
+
+uses
+  ServidorAPI.Controller.Conexao.Interfaces,ServidorAPI.Model.Conexao.Interfaces;
+
+
+Type
+  TControllerConexaoFactoryConexoes = class(TInterfacedObject, IControllerConexaoFactoryConexoes)
+  private
+    FParamConn:IModelConexaoParametros;
+  public
+    constructor Create(proxi:IModelConexaoParametros);
+    destructor Destroy; override;
+    class function New(proxi:IModelConexaoParametros): IControllerConexaoFactoryConexoes;
+    function Conexao: IModelConexao;
+  end;
+
+implementation
+
+{ TControllerConexaoFactory.Conexoes }
+
+uses System.SysUtils, Vcl.Forms, ServidorAPI.Model.Conexao.Factory.Conexoes;
+
+
+function TControllerConexaoFactoryConexoes.Conexao: IModelConexao;
+begin
+ {$IFDEF FIREDAC}
+  Result := TModelConexaoFactoryConexoes.New
+                                        .ConexaoFireDack(FParamConn)
+                                        .Conectar;
+
+  {$ENDIF}
+end;
+
+constructor TControllerConexaoFactoryConexoes.Create(proxi:IModelConexaoParametros);
+begin
+  FParamConn := proxi;
+end;
+
+destructor TControllerConexaoFactoryConexoes.Destroy;
+begin
+
+  inherited Destroy;
+end;
+
+class function TControllerConexaoFactoryConexoes.New
+  (proxi:IModelConexaoParametros): IControllerConexaoFactoryConexoes;
+begin
+  Result := Self.Create(proxi);
+end;
+
+end.

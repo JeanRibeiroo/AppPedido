@@ -1,0 +1,52 @@
+unit Servidor.Model.Conexao.Factory.DataSet;
+
+interface
+
+uses Servidor.Model.Conexao.Interfaces, Servidor.Model.Conexao.TableFireDac;
+
+Type
+  TModelConexaoFactoryDataSet = class(TInterfacedObject,
+    IModelConexaoFactoryDataSet)
+  private
+
+  public
+    constructor Create;
+    destructor Destroy; override;
+    class function New: IModelConexaoFactoryDataSet;
+    function DataSetFireDack(Conexao:IModelConexao): IModelDataSet;
+    function DataSetResult:IModelResultDataSet;
+  end;
+
+implementation
+
+{ TModelConexaoFactoryDataSet }
+
+uses Servidor.Model.Conexao.TableFireDacResult;
+
+constructor TModelConexaoFactoryDataSet.Create;
+begin
+
+end;
+
+function TModelConexaoFactoryDataSet.DataSetFireDack(Conexao:IModelConexao): IModelDataSet;
+begin
+  Result := TModelConexaoTable.New(Conexao);
+end;
+
+function TModelConexaoFactoryDataSet.DataSetResult: IModelDataSet;
+begin
+  Result := TModelConexaoDataSetResult.New;
+end;
+
+destructor TModelConexaoFactoryDataSet.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelConexaoFactoryDataSet.New: IModelConexaoFactoryDataSet;
+begin
+  Result := Self.Create;
+end;
+
+end.

@@ -1,0 +1,98 @@
+﻿unit App.View.Components.ListItens.Item001;
+
+interface
+
+uses
+  FMX.ListBox,
+  FMX.Types,
+  System.SysUtils;
+
+Type
+
+  IComponents<T> = Interface
+    ['{E8DD455E-0458-44A5-9B4C-AE1A0FA75AC4}']
+    function Component : TFmxObject;
+    function Container ( aValue : TFmxObject ) : IComponents<T>;
+    function This : T;
+  End;
+
+  TItem001 = class(TListBoxItem, IComponents<TItem001>)
+    private
+      FContainer: TFmxObject;
+      FOnExcluir: TProc<Integer>;
+      lPnlBackGround: TRectangle;
+     lSpeedBut: TSpeedButton;
+      procedure OnEnterSpeedBut(Sender: TObject);
+    public
+      function Component : TFmxObject;
+      function Container ( aValue : TFmxObject ) : IComponents<TItem001>;
+      function This : TItem001;
+      function OnExcluir(aValue: TProc<Integer>): TItem001;
+  end;
+
+
+
+implementation
+
+uses
+  FMX.StdCtrls,
+  FMX.Objects,
+  FMX.Graphics,
+  System.UITypes;
+
+{ TItem001 }
+
+function TItem001.Component: TFmxObject;
+var  but: TButton;
+
+begin
+  lPnlBackGround := TRectangle.Create(Self);
+  lPnlBackGround.Parent := Self;
+  lPnlBackGround.Align := TAlignLayout.Contents;
+  lPnlBackGround.Fill.Color := TAlphaColors.Lightgray;
+  lPnlBackGround.Stroke.Kind := TBrushKind.None;
+  lPnlBackGround.Opacity := 0;
+  lPnlBackGround.SendToBack;
+
+  lSpeedBut := TSpeedButton.Create(Self);
+  lSpeedBut.Parent := Self;
+  lSpeedBut.Align := TAlignLayout.Client;
+  lSpeedBut.BringToFront;
+  lSpeedBut.Opacity := 0;
+  lSpeedBut.OnEnter :=
+
+
+ { but :=  TButton.Create(Self);
+  but.Parent := Self;
+  but.Align := TAlignLayout.Right;
+  but.Width := 30;    }
+  Self.Text := 'tetse';
+  Self.Height := 30;
+
+
+  FContainer.AddObject(Self);
+end;
+
+function TItem001.Container(aValue: TFmxObject): IComponents<TItem001>;
+begin
+  Result := Self;
+  FContainer := aValue;
+end;
+
+procedure TItem001.OnEnterSpeedBut(Sender: TObject);
+begin
+  lre
+end;
+
+function TItem001.OnExcluir(aValue: TProc<Integer>): TItem001;
+begin
+  Result := Self;
+  FOnExcluir := aValue;
+end;
+
+function TItem001.This: TItem001;
+begin
+  Result := Self;
+end;
+
+end.

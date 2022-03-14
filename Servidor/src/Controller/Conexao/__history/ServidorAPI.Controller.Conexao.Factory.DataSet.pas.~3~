@@ -1,0 +1,51 @@
+unit ServidorAPI.Controller.Conexao.Factory.DataSet;
+
+interface
+
+uses
+  Servidor.Controller.Conexao.Interfaces, Servidor.Model.Conexao.Interfaces,
+  {$IFDEF FIREDAC}
+  Servidor.Model.Conexao.Factory.DataSet;
+  {$ENDIF}
+
+Type
+  TControllerConexaoFactoryDataSet = class(TInterfacedObject,
+    IControllerFactoryDataSet)
+  private
+
+  public
+    constructor Create;
+    destructor Destroy; override;
+    class function New: IControllerFactoryDataSet;
+    function DataSet(Conexao:IModelConexao): IModelDataSet;
+  end;
+
+implementation
+
+{ TControllerConexaoFactoryDataSet }
+
+
+constructor TControllerConexaoFactoryDataSet.Create;
+begin
+
+end;
+
+function TControllerConexaoFactoryDataSet.DataSet(Conexao:IModelConexao): IModelDataSet;
+begin
+  {$IFDEF FIREDAC}
+  Result := TModelConexaoFactoryDataSet.New.DataSetFireDack(Conexao);
+  {$ENDIF}
+end;
+
+destructor TControllerConexaoFactoryDataSet.Destroy;
+begin
+
+  inherited Destroy;
+end;
+
+class function TControllerConexaoFactoryDataSet.New: IControllerFactoryDataSet;
+begin
+  Result := Self.Create;
+end;
+
+end.

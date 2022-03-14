@@ -1,0 +1,140 @@
+unit ServidorAPI.Moodel.ParametrosConn;
+
+
+interface
+
+uses
+  ServidorAPI.Model.Conexao.Interfaces;
+
+Type
+  TModelParametroConn<T: IINterface> = class(TInterfacedObject,IModelConexaoParametros<<T>)
+    private
+      FDataBase:String;
+      FUserName:String;
+      FPassword:String;
+      FServer:String;
+      FDriverID:String;
+      FPorta:String;
+      FDriverLink:string;
+    public
+      constructor Create;
+      destructor  Destroy;override;
+      class function New:IModelConexaoParametros;
+      function DataBase(Value: string): IModelConexaoParametros;
+      function UserName(Value: string): IModelConexaoParametros;
+      function PassWord(Value: string): IModelConexaoParametros;
+      function DriveId(Value: string): IModelConexaoParametros;
+      function Server(Value: string): IModelConexaoParametros;
+      function DriverLink(Value: string): IModelConexaoParametros;
+      function Porta(Value: string): IModelConexaoParametros;
+      function getDataBase:String;
+      function getUserName:String;
+      function getPassword:String;
+      function getServer:String;
+      function getDriverID:String;
+      function getPorta:String;
+      function getDriverLink:string;
+  end;
+
+
+implementation
+
+{ TModelItens }
+
+constructor TModelParametroConn.Create;
+begin
+
+end;
+
+function TModelParametroConn.DataBase(Value: string): IModelConexaoParametros;
+begin
+  Result := Self;
+  FDataBase := Value;
+end;
+
+destructor TModelParametroConn.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelParametroConn.DriveId(Value : String): IModelConexaoParametros;
+begin
+  Result := Self;
+  FDriverID := Value;
+end;
+
+function TModelParametroConn.DriverLink(Value: string): IModelConexaoParametros;
+begin
+  Result := Self;
+  FDriverLink := Value;
+end;
+
+function TModelParametroConn.getDataBase: String;
+begin
+  Result := FDataBase;
+end;
+
+function TModelParametroConn.getDriverID: String;
+begin
+  Result := FDriverID;
+end;
+
+function TModelParametroConn.getDriverLink: string;
+begin
+  Result := FDriverLink;
+end;
+
+function TModelParametroConn.getPassword: String;
+begin
+  Result := FPassword;
+end;
+
+function TModelParametroConn.getPorta: String;
+begin
+  Result := FPorta;
+end;
+
+function TModelParametroConn.getServer: String;
+begin
+  Result := FServer;
+end;
+
+function TModelParametroConn.getUserName: String;
+begin
+  Result := FUserName;
+end;
+
+class function TModelParametroConn.New: IModelConexaoParametros;
+begin
+
+  if not Assigned(FInstance) then
+    FInstance := Self.Create;
+  Result :=  FInstance;
+end;
+
+function TModelParametroConn.Password(Value : String): IModelConexaoParametros;
+begin
+  Result := Self;
+  FPassword := Value;
+end;
+
+function TModelParametroConn.Porta(Value: string): IModelConexaoParametros;
+begin
+  Result := Self;
+  FPorta := Value;
+end;
+
+function TModelParametroConn.Server(Value: string): IModelConexaoParametros;
+begin
+   Result := Self;
+   FServer := Value;
+end;
+
+function TModelParametroConn.UserName(Value: string): IModelConexaoParametros;
+begin
+  Result := Self;
+  FUserName := Value;
+end;
+
+end.

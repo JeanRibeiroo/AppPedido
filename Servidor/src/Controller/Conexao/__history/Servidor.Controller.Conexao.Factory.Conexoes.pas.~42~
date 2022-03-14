@@ -1,0 +1,63 @@
+unit Servidor.Controller.Conexao.Factory.Conexoes;
+
+interface
+
+uses
+  Servidor.Controller.Conexao.Interfaces,Servidor.Model.Conexao.Interfaces,
+  Servidor.Controller.ParametrosSistema.Interfaces;
+
+
+Type
+  TControllerConexaoFactoryConexoes = class(TInterfacedObject,
+    IControllerConexaoFactoryConexoes)
+  private
+    FParamConn:IParametrosSistema;
+  public
+    constructor Create(Param:IParametrosSistema);
+    destructor Destroy; override;
+    class function New(Param:IParametrosSistema): IControllerConexaoFactoryConexoes;
+    function Conexao: IModelConexao;
+  end;
+
+implementation
+
+{ TControllerConexaoFactory.Conexoes }
+
+uses Servidor.Model.Conexao.Factory.Conexoes, System.SysUtils, Vcl.Forms;
+
+
+function TControllerConexaoFactoryConexoes.Conexao: IModelConexao;
+begin
+  Result := TModelConexaoFactoryConexoes.New
+                                        .ConexaoFireDack
+                                        .ConexaoParametros
+                                        .DataBase(FParamConn.Conn.getDataBase)
+                                        .UserName(FParamConn.Conn.getUserName)
+                                        .PassoWord(FParamConn.Conn.getPassword)
+                                        .DriveId(FParamConn.Conn.getServer)
+                                        .Server(FParamConn.Conn.DriverID())
+                                        .DriverLink(ExtractFilePath(Application.ExeName) + 'libmysql.dll')
+                                        .Porta(FParamConn.Conn.getPorta)
+                                        .EndConexaoParametros
+                                        .Conectar;
+
+end;
+
+constructor TControllerConexaoFactoryConexoes.Create(Param:IParametrosSistema);
+begin
+  FParamConn := Param;
+end;
+
+destructor TControllerConexaoFactoryConexoes.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TControllerConexaoFactoryConexoes.New
+  (Param:IParametrosSistema): IControllerConexaoFactoryConexoes;
+begin
+  Result := Self.Create(Param);
+end;
+
+end.

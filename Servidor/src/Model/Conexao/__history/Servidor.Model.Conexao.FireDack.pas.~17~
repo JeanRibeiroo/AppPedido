@@ -1,0 +1,122 @@
+unit Servidor.Model.Conexao.FireDack;
+
+interface
+
+uses Servidor.Model.Conexao.Interfaces, System.Classes, FireDAC.Comp.Client,
+  FireDAC.Phys.MySQL, FireDAC.Comp.UI;
+
+Type
+  TControllerListBoxPrincipal = class(TInterfacedObject, IModelConexao,
+    IModelConexaoParametros)
+  private
+    FConn: TFDconnection;
+    FDPhysMySQLDriverLink1: TFDPhysMySQLDriverLink;
+    FDGUIxWaitCursor1: TFDGUIxWaitCursor;
+    FDataBase: string;
+    FUserName: string;
+    FPassoWord: string;
+    FDriveId: string;
+    FServer: string;
+    FDriverLink: string;
+    FPorta: Integer;
+    function ConexaoParametros: IModelConexaoParametros;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    class function New: IModelConexao;
+    function &EndConexao: TComponent;
+    function DataBase(Value: string): IModelConexao;
+    function UserName(Value: string): IModelConexao;
+    function PassoWord(Value: string): IModelConexao;
+    function DriveId(Value: string): IModelConexao;
+    function Server(Value: string): IModelConexao;
+    function DriverLink(Value: string): IModelConexao;
+    function Porta(Value: Integer): IModelConexao;
+    function &EndConexaoParametros: IModelConexao;
+  end;
+
+implementation
+
+uses
+  System.SysUtils;
+
+{ TControllerListBoxPrincipal }
+
+function TControllerListBoxPrincipal.&EndConexao: TComponent;
+begin
+  Result := FConn;
+end;
+
+function TControllerListBoxPrincipal.EndConexaoParametros: IModelConexao;
+begin
+  Result := Self;
+end;
+
+function TControllerListBoxPrincipal.ConexaoParametros: IModelConexaoParametros;
+begin
+  Result := Self;
+end;
+
+constructor TControllerListBoxPrincipal.Create;
+begin
+  FConn := TFDconnection.Create(nil);
+  FDPhysMySQLDriverLink1 := TFDPhysMySQLDriverLink.Create(nil);
+  FDGUIxWaitCursor1 := TFDGUIxWaitCursor.Create(nil);
+end;
+
+function TControllerListBoxPrincipal.DataBase(Value: string): IModelConexao;
+begin
+  Result := Self;
+  FDataBase := Value;
+end;
+
+destructor TControllerListBoxPrincipal.Destroy;
+begin
+  FConn.Free;
+  FDPhysMySQLDriverLink1.Free;
+  FDGUIxWaitCursor1.Free;
+  inherited;
+end;
+
+function TControllerListBoxPrincipal.DriveId(Value: string): IModelConexao;
+begin
+  Result := Self;
+  FDriveId := Value;
+end;
+
+function TControllerListBoxPrincipal.DriverLink(Value: string): IModelConexao;
+begin
+  Result := Self;
+  FDriverLink := Value;
+end;
+
+class function TControllerListBoxPrincipal.New: IModelConexao;
+begin
+  Result := Self.Create;
+end;
+
+function TControllerListBoxPrincipal.PassoWord(Value: string): IModelConexao;
+begin
+  Result := Self;
+  FPassoWord := Value;
+end;
+
+function TControllerListBoxPrincipal.Porta(Value: Integer): IModelConexao;
+begin
+  Result := Self;
+  FPorta := Value;
+end;
+
+function TControllerListBoxPrincipal.Server(Value: string): IModelConexao;
+begin
+  Result := Self;
+  FServer := Value;
+end;
+
+function TControllerListBoxPrincipal.UserName(Value: string): IModelConexao;
+begin
+  Result := Self;
+  FUserName := Value;
+end;
+
+end.

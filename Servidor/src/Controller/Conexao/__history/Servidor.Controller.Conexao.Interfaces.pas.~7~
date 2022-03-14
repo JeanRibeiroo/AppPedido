@@ -1,0 +1,23 @@
+unit Servidor.Controller.Conexao.Interfaces;
+
+interface
+
+uses
+  Servidor.Model.Conexao.Interfaces;
+
+Type
+
+  IControllerConexaoFactoryConexoes = interface
+    ['{94BF54D0-F0DF-450F-82AA-B470C76B87B6}']
+    function Conexao:IModelConexao;
+  end;
+
+  IControllerFactoryDataSet = interface
+    function DataSet(Conexao:IModelConexao):IModelDataSet;
+  end;
+
+implementation
+
+
+
+end.

@@ -1,0 +1,7 @@
+unit ServerApp.Model.Pedido.Command.NewPedido;
+
+interface
+
+implementation
+
+end.

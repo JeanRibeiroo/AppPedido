@@ -1,0 +1,149 @@
+unit ServidorAPI.Controller.Conexao.Conexao;
+
+interface
+
+uses
+  ServidorAPI.Controller.Conexao.Interfaces,
+  ServidorAPI.Model.Conexao.Interfaces;
+
+Type
+  TControllerConexao = class(TInterfacedObject,IControllerConexao)
+    private
+      // [weak]
+      FConexao:IModelConexao;
+      FDataset:IModelDataSet;
+    public
+      constructor Create;
+      destructor  Destroy;override;
+      class function New:IControllerConexao;
+      function getParametrosConnIni:IModelConexaoParametros<IControllerConexao>;
+      function SetParametrosConnIni:IControllerConexao;
+      function Dataset: IModelDataSet;
+      function Conectar: Integer;
+      function StartTransaction: IControllerConexao;
+      function Commit: IControllerConexao;
+      function Rollback: IControllerConexao;
+      function Desconectar(IndexConn: Integer): IControllerConexao;
+  end;
+
+implementation
+
+uses
+  ServidorAPI.Controller.Conexao.Factory,
+  ServidorAPI.Model.Conexao.Factory.Conexoes,
+  ServidorAPI.Model.Conexao.Factory.DataSet;
+
+{ TControllerConexao }
+
+
+function TControllerConexao.Commit: IControllerConexao;
+begin
+  Result := Self;
+  FConexao.Commit;
+end;
+
+function TControllerConexao.Conectar: Integer;
+begin
+  //{$IFDEF FIREDAC}
+    FConexao := TModelConexaoFactoryConexoes.New.ConexaoFireDack;
+    Result :=
+      FConexao.Parametros
+        .DataBase('Grafi')
+        .UserName('Client')
+        .PassWord('cli@client#2020')
+        .DriveId('Mysql')
+        .Server('localhost')
+        .Porta('3306')
+        .&End
+      .Conectar;
+    FDataset := TModelConexaoFactoryDataSet.New.DataSetFireDack(FConexao);
+  // {$ENDIF}
+
+
+end;
+
+
+constructor TControllerConexao.Create;
+begin
+ // FileIni  := TFileIni.New(ExtractFilePath(Application.ExeName),'configConn.ini');
+end;
+
+function TControllerConexao.Dataset: IModelDataSet;
+begin
+  Result := FDataset;
+end;
+
+function TControllerConexao.Desconectar(IndexConn: Integer): IControllerConexao;
+begin
+  Result := Self;
+  FConexao.Disconnected(IndexConn);
+end;
+
+destructor TControllerConexao.Destroy;
+begin
+
+  inherited;
+end;
+
+function TControllerConexao.getParametrosConnIni: IModelConexaoParametros<IControllerConexao>;
+begin
+ { Result := TModelParametroConn.New
+                      .DataBase(TEncDec.New.Decripta(FileIni.Read('Parametros','DataBase')))
+                      .UserName(TEncDec.New.Decripta(FileIni.Read('Parametros','UserName')))
+                      .Password(TEncDec.New.Decripta(FileIni.Read('Parametros','Password')))
+                      .Server(TEncDec.New.Decripta(FileIni.Read('Parametros','Server')))
+                      .DriveID(TEncDec.New.Decripta(FileIni.Read('Parametros','DriverID')))
+                      .Porta(TEncDec.New.Decripta(FileIni.Read('Parametros','Porta')))
+                      .DriverLink(ExtractFilePath(Application.ExeName) + 'libmysql.dll'); }
+end;
+
+class function TControllerConexao.New: IControllerConexao;
+begin
+  Result := Self.Create;
+end;
+
+function TControllerConexao.Rollback: IControllerConexao;
+begin
+  Result := Self;
+  FConexao.Rollback;
+end;
+
+function TControllerConexao.SetParametrosConnIni: IControllerConexao;
+//var
+ // ConfigConn:TConfigConn;
+ // Param:TParametrosConexao;
+begin
+
+  Result := Self;
+ { ConfigConn := TConfigConn.Create(nil);
+  ConfigConn.ExibirForm(Param);
+  TFileIni.New(ExtractFilePath(Application.ExeName),'configConn.ini')
+            .Secao('Parametros')
+            .Propriedade('DataBase')
+            .ValuePropriedade(TEncDec.New.Encripta(Param.DataBase))
+            .Write
+            .Propriedade('UserName')
+            .ValuePropriedade(TEncDec.New.Encripta(Param.UserName))
+            .Write
+            .Propriedade('Password')
+            .ValuePropriedade(TEncDec.New.Encripta(Param.Password))
+            .Write
+            .Propriedade('Server')
+            .ValuePropriedade(TEncDec.New.Encripta(Param.Server))
+            .Write
+            .Propriedade('DriverID')
+            .ValuePropriedade(TEncDec.New.Encripta(Param.DriverID))
+            .Write
+            .Propriedade('Porta')
+            .ValuePropriedade(TEncDec.New.Encripta(Param.Porta))
+            .Write;
+  FreeAndNil(ConfigConn);   }
+end;
+
+function TControllerConexao.StartTransaction: IControllerConexao;
+begin
+  Result := Self;
+  FConexao.StartTransaction;
+end;
+
+end.

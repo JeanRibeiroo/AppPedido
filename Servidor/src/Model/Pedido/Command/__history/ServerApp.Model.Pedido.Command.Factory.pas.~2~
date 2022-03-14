@@ -1,0 +1,33 @@
+unit ServerApp.Model.Pedido.Command.Factory;
+
+
+
+interface
+
+
+
+Type
+
+  TModelFornecedorCommandFactory = class(TInterfacedObject, IModelFornecedorCommandFactory)
+    private
+      [weak]
+      FModel: IModelFornecedor;
+    public
+      constructor  Create(aValue: IModelFornecedor);
+      destructor Destroy; override;
+      class function New(aValue: IModelFornecedor): IModelFornecedorCommandFactory;
+
+  end;
+
+
+
+implementation
+
+
+
+{ TModelFornecedorCommandFactory }
+
+
+
+
+end.

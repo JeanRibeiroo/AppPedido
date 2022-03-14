@@ -1,0 +1,16 @@
+unit App.View.Healpers.Img;
+
+interface
+
+uses
+  FMX.Objects;
+
+Type
+
+  TImageHelpers = class helper for TImage
+    procedure ResourceImage(aResource: string);
+  end;
+
+implementation
+
+end.

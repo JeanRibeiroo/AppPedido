@@ -1,0 +1,50 @@
+unit ServidorAPI.Controller.Conexao.Factory;
+
+interface
+
+uses
+  ServidorAPI.Controller.Conexao.Interfaces;
+
+
+Type
+  TControllerConexaoFactory = class(TInterfacedObject, IControllerConexaoFactory)
+  private
+  public
+    constructor Create;
+    destructor Destroy; override;
+    class function New: IControllerConexaoFactory;
+    function Conexao:IControllerConexao;
+  end;
+
+implementation
+
+{ TControllerConexaoFactory.Conexoes }
+
+uses
+  ServidorAPI.Controller.Conexao.Conexao, GP1.Utol.LogDebug.Memory;
+
+
+function TControllerConexaoFactory.Conexao: IControllerConexao;
+begin
+  TDebuggerHelper.LogDebug('TControllerConexaoFactory.Conexao');
+  Result := TControllerConexao.New;
+end;
+
+constructor TControllerConexaoFactory.Create;
+begin
+  TDebuggerHelper.LogDebug('Create TControllerConexaoFactory');
+end;
+
+destructor TControllerConexaoFactory.Destroy;
+begin
+  TDebuggerHelper.LogDebug('Destroy TControllerConexaoFactory');
+  inherited Destroy;
+end;
+
+class function TControllerConexaoFactory.New
+  : IControllerConexaoFactory;
+begin
+  Result := Self.Create;
+end;
+
+end.

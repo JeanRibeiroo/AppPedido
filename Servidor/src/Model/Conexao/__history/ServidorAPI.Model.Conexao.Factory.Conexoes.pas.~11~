@@ -1,0 +1,48 @@
+unit ServidorAPI.Model.Conexao.Factory.Conexoes;
+
+interface
+
+uses ServidorAPI.Model.Conexao.Interfaces;
+
+Type
+  TModelConexaoFactoryConexoes = class(TInterfacedObject, IModelConexaoFactoryConexoes)
+  private
+
+  public
+    constructor Create;
+    destructor Destroy; override;
+    class function New: IModelConexaoFactoryConexoes;
+    function ConexaoFireDack: IModelConexao;
+  end;
+
+implementation
+
+uses
+  ServidorAPI.Model.Conexao.FireDac;
+
+
+
+{ TModelConexaoFactoryConexoes }
+
+function TModelConexaoFactoryConexoes.ConexaoFireDack: IModelConexao;
+begin
+  Result := TModelConexaoFireDac.New;
+end;
+
+constructor TModelConexaoFactoryConexoes.Create;
+begin
+
+end;
+
+destructor TModelConexaoFactoryConexoes.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelConexaoFactoryConexoes.New: IModelConexaoFactoryConexoes;
+begin
+  Result := Self.Create;
+end;
+
+end.

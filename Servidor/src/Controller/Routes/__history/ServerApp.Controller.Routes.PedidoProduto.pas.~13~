@@ -1,0 +1,57 @@
+unit ServerApp.Controller.Routes.PedidoProduto;
+
+
+
+interface
+
+uses
+  Horse.HTTP;
+
+
+procedure DoUpDate(Req: THorseRequest);
+procedure DoDelete(Req: THorseRequest);
+
+
+procedure Registry;
+
+implementation
+
+uses
+  Horse,
+  System.JSON,
+  System.SysUtils,
+  BackEnd.Controller.DAO.DAO,
+  ServerApp.Model.Pedido.PedidoProduto;
+
+
+procedure DoUpDate(Req: THorseRequest);
+begin
+  var lBody := TJSONObject.ParseJSONValue(Req.Body) as TJSONObject;
+  var lDAO :=  TControllerDAO.New;
+  try
+    TModelPedidoProduto.New(lDAO.DataSet)
+      .SetParams(lBody)
+     // .UpDate(Req.Params['IdPedidoProduto'].ToInteger);
+  finally
+    lBody.Free;
+  end;
+end;
+
+procedure DoDelete(Req: THorseRequest);
+begin
+  var lDAO :=  TControllerDAO.New;
+
+  TModelPedidoProduto.New(lDAO.DataSet)
+    .Delete(Req.Params['IdPedidoProduto'].ToInteger);
+end;
+
+procedure Registry;
+begin
+   THorse
+    .Put('/pedidos/produtos/:IdPedidoProduto', DoUpDate)
+    .Delete('/pedidos/produtos/:IdPedidoProduto', DoDelete);
+end;
+
+end.
+
+

@@ -1,0 +1,162 @@
+unit App.Model.Entity.Pedido.PedidoProdutos;
+
+interface
+
+uses
+  App.Model.Entity.Produto.Produto;
+
+
+Type
+
+  IEntityPedidoProdutos = Interface
+    ['{AEB3C662-FE66-4B69-9B0D-082C18914777}']
+    function IdPedidoProduto(aValue: Integer): IEntityPedidoProdutos; overload;
+    function IdPedidoProduto: Integer; overload;
+    function NumeroPedido(aValue: Integer): IEntityPedidoProdutos; overload;
+    function NumeroPedido: Integer; overload;
+    function CodigoProduto(aValue: Integer): IEntityPedidoProdutos; overload;
+    function CodigoProduto: Integer; overload;
+    function Quantidade(aValue: Integer): IEntityPedidoProdutos; overload;
+    function Quantidade: Integer; overload;
+    function ValorUnitario(aValue: Real): IEntityPedidoProdutos; overload;
+    function ValorUnitario: Real; overload;
+    function ValorTotal(aValue: Real): IEntityPedidoProdutos; overload;
+    function ValorTotal: Real; overload;
+    function Produto(aValue: IEntityProduto): IEntityPedidoProdutos; overload;
+    function Produto: IEntityProduto; overload;
+  End;
+
+  TEntityPedidoProdutos = class(TInterfacedObject, IEntityPedidoProdutos)
+    private
+       FIdPedidoProduto: Integer;
+       FNumeroPedido: Integer;
+       FCodigoProduto: Integer;
+       FQuantidade: Integer;
+       FValorUnitario: Real;
+       FValorTotal: Real;
+       FProduto: IEntityProduto;
+    public
+      constructor Create;
+      destructor Destroy; override;
+      class function New: IEntityPedidoProdutos;
+      function IdPedidoProduto(aValue: Integer): IEntityPedidoProdutos; overload;
+      function IdPedidoProduto: Integer; overload;
+      function NumeroPedido(aValue: Integer): IEntityPedidoProdutos; overload;
+      function NumeroPedido: Integer; overload;
+      function CodigoProduto(aValue: Integer): IEntityPedidoProdutos; overload;
+      function CodigoProduto: Integer; overload;
+      function Quantidade(aValue: Integer): IEntityPedidoProdutos; overload;
+      function Quantidade: Integer; overload;
+      function ValorUnitario(aValue: Real): IEntityPedidoProdutos; overload;
+      function ValorUnitario: Real; overload;
+      function ValorTotal(aValue: Real): IEntityPedidoProdutos; overload;
+      function ValorTotal: Real; overload;
+      function Produto(aValue: IEntityProduto): IEntityPedidoProdutos; overload;
+      function Produto: IEntityProduto; overload;
+  end;
+
+implementation
+
+{ TEntityPedidoProdutos }
+
+function TEntityPedidoProdutos.CodigoProduto(
+  aValue: Integer): IEntityPedidoProdutos;
+begin
+  Result := Self;
+  FCodigoProduto := aValue;
+end;
+
+function TEntityPedidoProdutos.CodigoProduto: Integer;
+begin
+  Result := FCodigoProduto;
+end;
+
+constructor TEntityPedidoProdutos.Create;
+begin
+  FProduto := TEntityProduto.New;
+end;
+
+destructor TEntityPedidoProdutos.Destroy;
+begin
+
+  inherited;
+end;
+
+function TEntityPedidoProdutos.IdPedidoProduto(
+  aValue: Integer): IEntityPedidoProdutos;
+begin
+  Result := Self;
+  FIdPedidoProduto := aValue;
+end;
+
+function TEntityPedidoProdutos.IdPedidoProduto: Integer;
+begin
+  Result := FIdPedidoProduto;
+end;
+
+class function TEntityPedidoProdutos.New: IEntityPedidoProdutos;
+begin
+  Result := Self.Create;
+end;
+
+function TEntityPedidoProdutos.NumeroPedido(
+  aValue: Integer): IEntityPedidoProdutos;
+begin
+  Result := Self;
+  FNumeroPedido := aValue;
+end;
+
+function TEntityPedidoProdutos.NumeroPedido: Integer;
+begin
+  Result := FNumeroPedido;
+end;
+
+function TEntityPedidoProdutos.Produto: IEntityProduto;
+begin
+  Result := FProduto;
+end;
+
+function TEntityPedidoProdutos.Produto(
+  aValue: IEntityProduto): IEntityPedidoProdutos;
+begin
+  Result := Self;
+  FProduto := aValue;
+end;
+
+function TEntityPedidoProdutos.Quantidade(
+  aValue: Integer): IEntityPedidoProdutos;
+begin
+  Result := Self;
+  FQuantidade := aValue;
+end;
+
+function TEntityPedidoProdutos.Quantidade: Integer;
+begin
+  Result := FQuantidade;
+end;
+
+function TEntityPedidoProdutos.ValorTotal: Real;
+begin
+  Result := FValorTotal;
+end;
+
+function TEntityPedidoProdutos.ValorTotal(
+  aValue: Real): IEntityPedidoProdutos;
+begin
+  Result := Self;
+  FValorTotal := aValue;
+end;
+
+function TEntityPedidoProdutos.ValorUnitario: Real;
+begin
+  Result := FValorUnitario;
+end;
+
+function TEntityPedidoProdutos.ValorUnitario(
+  aValue: Real): IEntityPedidoProdutos;
+begin
+  Result := Self;
+  FValorUnitario := aValue;
+end;
+
+end.

@@ -1,0 +1,41 @@
+unit Servidor.Controller.Conexao.Factory.DataSet;
+
+interface
+
+uses
+  Servidor.Controller.Conexao.Interfaces;
+
+Type
+  TControllerConexaoFactoryDataSet = class(TInterfacedObject,IControllerFactoryDataSet)
+  private
+
+  public
+    constructor Create;
+    destructor  Destroy;override;
+    class function New:IControllerFactoryDataSet;
+    function DataSet:IModelDataSet;
+  end;
+
+implementation
+
+{ TControllerConexaoFactoryDataSet }
+
+
+constructor TControllerConexaoFactoryDataSet.Create;
+begin
+
+end;
+
+destructor TControllerConexaoFactoryDataSet.Destroy;
+begin
+
+  inherited;
+end;
+
+
+class function TControllerConexaoFactoryDataSet.New: IControllerFactoryDataSet;
+begin
+  Result := Self.Create;
+end;
+
+end.

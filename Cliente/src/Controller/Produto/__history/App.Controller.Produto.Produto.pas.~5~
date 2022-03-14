@@ -1,0 +1,45 @@
+unit App.Controller.Produto.Produto;
+
+interface
+
+uses
+  App.Model.Entity.Produto.Produto;
+
+Type
+
+  IControllerProduto = Interface
+    ['{EDDBE72B-D2FD-485A-9D7E-B83350F19556}']
+    function Entity(aValue: IEntityProduto): IControllerProduto; overload;
+    function Entity: IEntityProduto; overload;
+    function Get: IControllerProduto;
+  End;
+
+  TControllerProduto = class(TInterfacedObject, IControllerProduto)
+    private
+    public
+      constructor Create;
+      destructor Destroy; override;
+      class function New: IControllerProduto;
+  end;
+
+implementation
+
+{ TControllerProduto }
+
+constructor TControllerProduto.Create;
+begin
+
+end;
+
+destructor TControllerProduto.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TControllerProduto.New: IControllerProduto;
+begin
+  Result := Self.Create;
+end;
+
+end.

@@ -1,0 +1,130 @@
+unit ServidorAPI.Model.Conexao.FireDac;
+
+interface
+
+uses ServidorAPI.Model.Conexao.Interfaces,
+     System.Classes,
+     FireDac.Comp.Client,
+     FireDAC.Stan.Intf,
+     FireDAC.Stan.Option,
+     FireDAC.Stan.Error,
+     FireDAC.UI.Intf,
+     FireDAC.Phys.Intf,
+     FireDAC.Stan.Def,
+     FireDAC.Stan.Pool,
+     FireDAC.Stan.Async,
+     FireDAC.Phys,
+     FireDAC.VCLUI.Wait,
+     FireDAC.Phys.InfxDef,
+     FireDAC.Phys.ODBCBase,
+     FireDAC.Phys.Infx,
+     FireDAC.Comp.UI,
+     Data.DB,
+     FireDAC.Stan.Param,
+     FireDAC.DatS,
+     FireDAC.DApt.Intf,
+     FireDAC.DApt,
+     FireDAC.Phys.MySQL,
+     FireDAC.Phys.MySQLDef,
+     System.Generics.Collections;
+
+Type
+  TModelConexaoFireDac = class(TInterfacedObject, IModelConexao)
+
+  private
+    FIndexConn: Integer;
+   // FConn: TFDconnection;
+    FDPhysMySQLDriverLink1: TFDPhysMySQLDriverLink;
+    FDGUIxWaitCursor1: TFDGUIxWaitCursor;
+    FParametros:IModelConexaoParametros<IModelConexao>;
+    procedure LerParametros;
+  public
+    FConnList : TObjectList<TFDConnection>;
+    constructor Create;
+    destructor Destroy; override;
+    class function New: IModelConexao;
+    function Conectar: Integer;
+    function Disconnected(IndexConn : Integer): IModelConexao;
+    function Parametros: IModelConexaoParametros<IModelConexao>;
+    function &EndConexao: TComponent;
+  end;
+
+
+implementation
+
+uses
+  System.SysUtils,
+  ServidorAPI.Moodel.ParametrosConn;
+
+{ TModelConexaoFireDac }
+
+function TModelConexaoFireDac.&EndConexao: TComponent;
+begin
+  Result := FConnList.Items[FIndexConn];
+end;
+
+procedure TModelConexaoFireDac.LerParametros;
+begin
+   FConnList.Items[FIndexConn].Params.Add('Database='  + FParametros.getDataBase);
+   FConnList.Items[FIndexConn].Params.Add('User_Name=' + FParametros.getUserName);
+   FConnList.Items[FIndexConn].Params.Add('Password='  + FParametros.getPassword);
+   FConnList.Items[FIndexConn].Params.Add('Server='    + FParametros.getServer);
+   FConnList.Items[FIndexConn].Params.Add('DriverID='  + FParametros.getDriverID);
+   FConnList.Items[FIndexConn].Params.Add('PORT='      + FParametros.getPorta);
+   FConnList.Items[FIndexConn].Params.Add('UseSSL=False');
+   FConnList.Items[FIndexConn].Params.Add('CharacterSet=utf8');
+   FConnList.Items[FIndexConn].LoginPrompt := False;
+   FDPhysMySQLDriverLink1.VendorLib := FParametros.getDriverLink;
+end;
+
+function TModelConexaoFireDac.Conectar: Integer;
+begin
+  if not Assigned(FConnList) then
+    FConnList := TObjectList<TFDConnection>.Create;
+  FConnList.Add(TFDConnection.Create(nil));
+  FIndexConn := Pred(FConnList.Count);
+
+  LerParametros;
+  try
+    FConnList.Items[FIndexConn].Connected;
+
+    Result := FIndexConn;
+  Except
+     on E: Exception do
+      raise Exception.Create('Não foi possivel conectar no Banco ' + E.Message);
+  end;
+end;
+
+constructor TModelConexaoFireDac.Create;
+begin
+  FParametros := TModelParametroConn<IModelConexao>.New(Self); //pega uma intancia ja criada.
+  FDPhysMySQLDriverLink1 := TFDPhysMySQLDriverLink.Create(nil);
+  FDGUIxWaitCursor1 := TFDGUIxWaitCursor.Create(nil);
+end;
+
+destructor TModelConexaoFireDac.Destroy;
+begin
+  FreeAndNil(FDPhysMySQLDriverLink1);
+  FreeAndNil(FDGUIxWaitCursor1);
+  inherited Destroy;
+end;
+
+function TModelConexaoFireDac.Disconnected(IndexConn: Integer): IModelConexao;
+begin
+  Result := Self;
+  FConnList.Items[IndexConn].Connected := false;
+  FConnList.Items[IndexConn].Free;
+  FConnList.TrimExcess;
+end;
+
+class function TModelConexaoFireDac.New: IModelConexao;
+begin
+  Result := Self.Create;
+end;
+
+function TModelConexaoFireDac.Parametros: IModelConexaoParametros<IModelConexao>;
+begin
+  Result := FParametros;
+end;
+
+end.

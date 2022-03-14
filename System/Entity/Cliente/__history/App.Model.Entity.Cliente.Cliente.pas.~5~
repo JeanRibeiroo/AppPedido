@@ -1,0 +1,95 @@
+unit App.Model.Entity.Cliente.Cliente;
+
+interface
+
+Type
+
+  IEntityCliente = Interface
+    ['{D29C2435-CBA1-4225-8F93-7FC5221073E4}']
+    function Codigo(aValue: Integer): IEntityCliente; overload;
+    function Codigo: Integer; overload;
+    function Nome(aValue: string): IEntityCliente; overload;
+    function Nome: string; overload;
+    function Cidade(aValue: string): IEntityCliente; overload;
+    function Cidade: string; overload;
+    function UF(aValue: string): IEntityCliente; overload;
+    function UF: string; overload;
+  End;
+
+  TIEntityCliente = class(TInterfacedObject, IEntityCliente)
+    private
+    public
+      constructor Create;
+      destructor Destroy; override;
+      class function New: IEntityCliente;
+      function Codigo(aValue: Integer): IEntityCliente; overload;
+      function Codigo: Integer; overload;
+      function Nome(aValue: string): IEntityCliente; overload;
+      function Nome: string; overload;
+      function Cidade(aValue: string): IEntityCliente; overload;
+      function Cidade: string; overload;
+      function UF(aValue: string): IEntityCliente; overload;
+      function UF: string; overload;
+  end;
+
+implementation
+
+{ TIEntityCliente }
+
+function TIEntityCliente.Cidade: string;
+begin
+
+end;
+
+function TIEntityCliente.Cidade(aValue: string): IEntityCliente;
+begin
+
+end;
+
+function TIEntityCliente.Codigo(aValue: Integer): IEntityCliente;
+begin
+
+end;
+
+function TIEntityCliente.Codigo: Integer;
+begin
+
+end;
+
+constructor TIEntityCliente.Create;
+begin
+
+end;
+
+destructor TIEntityCliente.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TIEntityCliente.New: IEntityCliente;
+begin
+  Result := Self.Create;
+end;
+
+function TIEntityCliente.Nome(aValue: string): IEntityCliente;
+begin
+
+end;
+
+function TIEntityCliente.Nome: string;
+begin
+
+end;
+
+function TIEntityCliente.UF: string;
+begin
+
+end;
+
+function TIEntityCliente.UF(aValue: string): IEntityCliente;
+begin
+
+end;
+
+end.

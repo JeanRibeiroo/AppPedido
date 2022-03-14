@@ -1,0 +1,51 @@
+unit ServidorAPI.Controller.Conexao.Factory;
+
+interface
+
+uses
+  ServidorAPI.Controller.Conexao.Interfaces,ServidorAPI.Model.Conexao.Interfaces;
+
+
+Type
+  TControllerConexaoFactoryConexoes = class(TInterfacedObject, IControllerConexaoFactory)
+  private
+  public
+    constructor Create;
+    destructor Destroy; override;
+    class function New: IControllerConexaoFactory;
+    function Conexao:IControllerConexao;
+  end;
+
+implementation
+
+{ TControllerConexaoFactory.Conexoes }
+
+uses
+  System.SysUtils,
+  Vcl.Forms,
+  ServidorAPI.Controller.Conexao.Conexao;
+
+
+function TControllerConexaoFactoryConexoes.Conexao: IControllerConexao;
+begin
+  Result := TControllerConexao.New;
+end;
+
+constructor TControllerConexaoFactoryConexoes.Create;
+begin
+
+end;
+
+destructor TControllerConexaoFactoryConexoes.Destroy;
+begin
+
+  inherited Destroy;
+end;
+
+class function TControllerConexaoFactoryConexoes.New
+  : IControllerConexaoFactory;
+begin
+  Result := Self.Create;
+end;
+
+end.

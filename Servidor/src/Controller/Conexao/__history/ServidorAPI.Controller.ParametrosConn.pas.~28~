@@ -1,0 +1,64 @@
+unit ServidorAPI.Controller.ParametrosConn;
+
+interface
+
+uses
+  ServidorAPI.Controller.Conexao.Interfaces, GP1.Util.FileIni.Interfaces;
+
+
+Type
+
+  TParametrosConn = class(TInterfacedObject,IControllerFactoryParametro)
+    private
+     // [weak]
+      FileIni:IFileIni;
+    public
+      constructor Create;
+      destructor  Destroy;override;
+      class function New:IControllerFactoryParametro;
+      function ParametroFireDac:IModelParametrosFireDack;
+  end;
+
+implementation
+
+uses
+  GP1.Util.FileIni.FileIni,
+  System.SysUtils, Vcl.Forms, Vcl.Dialogs, GP1.Util.Encripta.EncDec,
+  GP1.Util.Encripta.Interfaces, ServidorAPI.Moodel.ParametrosConn,
+  ServidorAPI.Model.Factory.ParametrosConn;
+
+{ TParametrosSistema }
+
+constructor TParametrosConn.Create;
+begin
+  FileIni := TFileIni.New(ExtractFilePath(Application.ExeName),'configConn.ini');
+
+end;
+
+destructor TParametrosConn.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TParametrosConn.New: IControllerFactoryParametro;
+begin
+  Result := Self.Create;
+end;
+
+
+function TParametrosConn.ParametroFireDac: IModelParametrosFireDack;
+begin
+
+  Result := TModelFactoryParametroConn.New
+                                      .ParametroFireDac
+                                      .DataBase(TEncDec.New.Decripta(FileIni.Read('Parametros','DataBase')))
+                                      .UserName(TEncDec.New.Decripta(FileIni.Read('Parametros','UserName')))
+                                      .Password(TEncDec.New.Decripta(FileIni.Read('Parametros','Password')))
+                                      .Server(TEncDec.New.Decripta(FileIni.Read('Parametros','Server')))
+                                      .DriverID(TEncDec.New.Decripta(FileIni.Read('Parametros','DriverID')))
+                                      .Porta(TEncDec.New.Decripta(FileIni.Read('Parametros','Porta')));
+
+end;
+
+end.

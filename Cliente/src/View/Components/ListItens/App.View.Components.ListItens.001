@@ -1,0 +1,16 @@
+unit App.View.Components.ListItens;
+
+interface
+
+
+Type
+
+  TItem = class(TListBoxItem)
+    private
+    public
+      procedure OnClickBut;
+  end;
+
+implementation
+
+end.

@@ -1,0 +1,38 @@
+unit Servidor.Model.Conexao.TableFireDacResult;
+
+interface
+
+
+Type
+  TModelConexaoDataSetResult = class(TInterfacedObject,IControllerListBoxMenu)
+  private
+
+  public
+    constructor Create;
+    destructor  Destroy;override;
+    class function New:IControllerListBoxMenu;
+  end;
+
+implementation
+
+{ TModelConexaoDataSetResult }
+
+
+constructor TModelConexaoDataSetResult.Create;
+begin
+
+end;
+
+destructor TModelConexaoDataSetResult.Destroy;
+begin
+
+  inherited;
+end;
+
+
+class function TModelConexaoDataSetResult.New: IControllerListBoxMenu;
+begin
+  Result := Self.Create;
+end;
+
+end.

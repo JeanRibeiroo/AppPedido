@@ -1,0 +1,85 @@
+unit App.Controller.Produto.Produto;
+
+interface
+
+uses
+  App.Model.Entity.Produto.Produto;
+
+Type
+
+  IControllerProduto = Interface
+    ['{EDDBE72B-D2FD-485A-9D7E-B83350F19556}']
+    function Entity(aValue: IEntityProduto): IControllerProduto; overload;
+    function Entity: IEntityProduto; overload;
+    function Get: IControllerProduto;
+  End;
+
+  TControllerProduto = class(TInterfacedObject, IControllerProduto)
+    private
+      FEntity: IEntityProduto;
+      const SYS_API_URL_BASE = 'http://localhost:8080/AppPedidos';
+    public
+      constructor Create;
+      destructor Destroy; override;
+      class function New: IControllerProduto;
+      function Entity(aValue: IEntityProduto): IControllerProduto; overload;
+      function Entity: IEntityProduto; overload;
+      function Get: IControllerProduto;
+  end;
+
+implementation
+
+
+uses
+  System.DAO.Factory;
+
+{ TControllerProduto }
+
+constructor TControllerProduto.Create;
+begin
+  Entity := TEntityProduto.New;
+end;
+
+destructor TControllerProduto.Destroy;
+begin
+
+  inherited;
+end;
+
+function TControllerProduto.Entity(aValue: IEntityProduto): IControllerProduto;
+begin
+  Result := Self;
+  FEntity := aValue;
+end;
+
+function TControllerProduto.Entity: IEntityProduto;
+begin
+  Result := FEntity;
+end;
+
+function TControllerProduto.Get: IControllerProduto;
+begin
+  Result := Self;
+  try
+    var lJsonProduto :=
+      TModelDAOFactory.New
+         .REST
+         .BaseURL(SYS_API_URL_BASE)
+         .Resource(Format('/clientes/%d',[FEntity.Codigo]))
+         .Accept('application/json')
+         .Select
+           .ToJsonObject;
+    JsonToEntity(lJsonProduto);
+    lJsonProduto.Free;
+  Except
+    on E: Exception do
+     raise Exception.Create('Não foi possivel consultar o Cliente. - ' + E.Message);
+  end;
+end;
+
+class function TControllerProduto.New: IControllerProduto;
+begin
+  Result := Self.Create;
+end;
+
+end.

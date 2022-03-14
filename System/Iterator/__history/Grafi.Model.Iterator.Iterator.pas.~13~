@@ -1,0 +1,72 @@
+unit Grafi.Model.Iterator.Iterator;
+
+
+interface
+
+uses
+  Grafi.Model.Iterator.Interfaces,
+  System.Generics.Collections;
+
+Type
+  TModelIterator<T> = class(TInterfacedObject,IModelIterator<T>)
+    private
+      FLista : TList<T>;
+      FCount:Integer;
+    public
+      constructor Create;
+      destructor  Destroy;override;
+      class function New:IModelIterator<T>;
+      function HasNext:Boolean;
+      function Next:T;
+      function Add(Value:T):IModelIterator<T>;
+      function Itens:T;
+      function Count:Integer;
+  end;
+
+implementation
+
+
+{ TModelIterator<T> }
+
+function TModelIterator<T>.Add(Value: T): IModelIterator<T>;
+begin
+
+end;
+
+function TModelIterator<T>.Count: Integer;
+begin
+
+end;
+
+constructor TModelIterator<T>.Create;
+begin
+  FLista := TList<T>.Create;
+end;
+
+destructor TModelIterator<T>.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelIterator<T>.HasNext: Boolean;
+begin
+
+end;
+
+function TModelIterator<T>.Itens: T;
+begin
+
+end;
+
+class function TModelIterator<T>.New: IModelIterator<T>;
+begin
+  Result := Self.Create;
+end;
+
+function TModelIterator<T>.Next: T;
+begin
+
+end;
+
+end.

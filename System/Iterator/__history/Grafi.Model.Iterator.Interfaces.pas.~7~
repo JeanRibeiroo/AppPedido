@@ -1,0 +1,16 @@
+unit Grafi.Model.Iterator.Interfaces;
+
+interface
+
+uses
+  System.Generics.Collections;
+
+Type
+  IModelIterator<T> = Interface
+    ['{FE097161-68FF-4EBE-A58F-C92C66E4C629}']
+
+  End;
+
+implementation
+
+end.

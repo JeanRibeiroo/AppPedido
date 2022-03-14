@@ -1,0 +1,62 @@
+unit Servidor.Model.ParametrosSistema.ParametrosConn.Conn.Model;
+
+interface
+
+uses
+  System.Generics.Collections, Servidor.Controller.ParametrosSistema.Interfaces;
+
+
+Type
+ TParametrosSistema = class(TInterfacedObject,IParametrosConnSistema)
+   private
+      FItens : TList<iItens>;
+      FIteratorItens : IIteratorItens;
+   public
+     constructor Create;
+     destructor  Destroy;override;
+     class function New:IParametrosConnSistema;
+     function AddItens(Value : iItens) : IParametrosConnSistema;
+     function Itens : iIteratorItens;
+ end;
+
+
+implementation
+
+uses
+  Servidor.Model.ParametrosSistema.ParametrosConn.Interator;
+
+
+{ TParametrosSistema }
+
+
+
+{ TParametrosSistema }
+
+function TParametrosSistema.AddItens(Value: iItens): IParametrosConnSistema;
+begin
+    FItens.Add(Value);
+end;
+
+constructor TParametrosSistema.Create;
+begin
+  FItens := TList<iItens>.Create;
+  FIteratorItens := TModelItensIterator.New;
+end;
+
+destructor TParametrosSistema.Destroy;
+begin
+
+  inherited;
+end;
+
+function TParametrosSistema.Itens: iIteratorItens;
+begin
+  Result := FIteratorItens.AddList(FItens);
+end;
+
+class function TParametrosSistema.New: IParametrosConnSistema;
+begin
+    Result := Self.Create;
+end;
+
+end.

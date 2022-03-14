@@ -1,0 +1,75 @@
+unit Grafi.Model.DAO.Params;
+
+interface
+
+uses
+  System.JSON,
+  System.Generics.Collections;
+
+Type
+
+  IParams = Interface
+    function Add( aName, aValue: string ): IParams;
+    function List: TDictionary<string, string>;
+    function ToJson: TJSONObject;
+  End;
+
+  TParams = class(TInterfacedObject, IParams)
+    private
+      FList: TDictionary<string, string>;
+    public
+      constructor Create;
+      destructor Destroy; override;
+      class function New: IParams;
+      function Add( aName, aValue: string ): IParams;
+      function List: TDictionary<string, string>;
+      function ToJson: TJSONObject;
+  End;
+
+implementation
+
+uses
+  System.SysUtils;
+
+
+{ TParams }
+
+function TParams.Add(aName, aValue: string): IParams;
+begin
+   Result := Self;
+   if not aValue.IsEmpty then
+     FList.Add(aName, aValue);
+end;
+
+constructor TParams.Create;
+begin
+  FList := TDictionary<string, string>.Create;
+end;
+
+destructor TParams.Destroy;
+begin
+  FList.Free;
+  inherited;
+end;
+
+function TParams.List: TDictionary<string, string>;
+begin
+  Result := FList;
+end;
+
+class function TParams.New: IParams;
+begin
+  Result := Self.Create;
+end;
+
+function TParams.ToJson: TJSONObject;
+var LPair: TPair<string, string>;
+begin
+  if FList.Count < 0 then
+    Exit;
+  Result := TJSONObject.Create;
+  for LPair in FList do
+    Result.AddPair(LPair.Key, LPair.Value);
+end;
+
+end.

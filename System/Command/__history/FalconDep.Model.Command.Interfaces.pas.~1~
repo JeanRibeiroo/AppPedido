@@ -1,0 +1,7 @@
+unit FalconDep.Model.Command.Interfaces;
+
+interface
+
+implementation
+
+end.

@@ -1,0 +1,50 @@
+unit FalconDep.Model.Command.Invoker;
+
+interface
+
+uses
+  FalconDep.Model.Command.Interfaces;
+
+Type
+
+  TInvoker = class(TInterfacedObject,IInvoker)
+    private
+    public
+      constructor Create;
+      destructor  Destroy; override;
+      class function New: IInvoker;
+      function Add( aValue : ICommand) : IInvoker;
+      function Execute : IInvoker;
+  end;
+
+implementation
+
+{ TInvoker }
+
+function TInvoker.Add(aValue: ICommand): IInvoker;
+begin
+
+end;
+
+constructor TInvoker.Create;
+begin
+
+end;
+
+destructor TInvoker.Destroy;
+begin
+
+  inherited;
+end;
+
+function TInvoker.Execute: IInvoker;
+begin
+
+end;
+
+class function TInvoker.New: IInvoker;
+begin
+  Result := Self.Create;
+end;
+
+end.

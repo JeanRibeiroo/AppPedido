@@ -1,0 +1,163 @@
+unit ServerApp.Model.Pedido.Pedido;
+
+interface
+
+uses
+  ServidorAPI.Model.Conexao.Interfaces,
+  System.JSON,
+  App.Model.Entity.Pedido.Pedido,
+  System.Command.Interfaces;
+
+Type
+
+  IModelPedido = Interface
+    ['{12E8CE4E-D43D-4CBD-B234-19840204C205}']
+    function Entity(aValue: IEntityPedido): IModelPedido; overload;
+    function Entity: IEntityPedido; overload;
+    function SetParams(aValue: TJSONObject): IModelPedido; overload;
+    function DataSet: IModelDataset;
+    function Get(aIdPedido: Integer): TJSONObject;
+    function MaxValueId: Integer;
+    function Insert: IModelPedido;
+  End;
+
+  IModelPedidoCommandFactory = Interface
+    ['{68D3B90D-F539-4570-962A-34448EA2158F}']
+    function GetNumeroPedido: ICommand;
+    function NewPedido: ICommand;
+  End;
+
+
+  TModelPedido = class(TInterfacedObject, IModelPedido)
+    private
+      [weak]
+      FDataSet: IModelDataset;
+      FEntity: IEntityPedido;
+    public
+      constructor Create(aDataSet: IModelDataset);
+      destructor Destroy; override;
+      class function New(aDataSet: IModelDataset): IModelPedido;
+      function Entity(aValue: IEntityPedido): IModelPedido; overload;
+      function Entity: IEntityPedido; overload;
+      function SetParams(aValue: TJSONObject): IModelPedido; overload;
+      function DataSet: IModelDataset;
+      function Get(aIdPedido: Integer): TJSONObject;
+      function MaxValueId: Integer;
+      function Insert: IModelPedido;
+  end;
+
+implementation
+
+uses
+  Server.Model.DAO,
+  System.Classes,
+  System.SysUtils,
+  App.Model.Entity.Pedido.PedidoProdutos;
+
+{ TModelPedido }
+
+constructor TModelPedido.Create(aDataSet: IModelDataset);
+begin
+  FDataSet := aDataSet;
+  FEntity := TEntityPedido.New;
+end;
+
+function TModelPedido.DataSet: IModelDataset;
+begin
+  Result := FDataSet
+end;
+
+destructor TModelPedido.Destroy;
+begin
+
+  inherited;
+end;
+
+function TModelPedido.Entity: IEntityPedido;
+begin
+  Result := FEntity;
+end;
+
+function TModelPedido.Entity(aValue: IEntityPedido): IModelPedido;
+begin
+  Result := Self;
+  FEntity := aValue;
+end;
+
+function TModelPedido.Get(aIdPedido: Integer): TJSONObject;
+begin
+  Result :=
+  TDAOGeneric.New(FDataSet)
+     .SQL
+       .Tabela('Pedido')
+       .Fields('NumeroPedido, DATE_FORMAT(DataEmissao, "%d/%m/%Y" ) as DtaEmissao , ValorTotal, CodigoCliente')
+       .Where('AND NumeroPedido = ' + aIdPedido.ToString )
+     .&End
+     .Select
+     .DataSetAsJsonObject;
+end;
+
+function TModelPedido.Insert: IModelPedido;
+begin
+  try
+    Result :=  Self;
+      TDAOGeneric.New(FDataSet)
+        .SQL
+          .Tabela('Pedido')
+          .Fields('NumeroPedido, DataEmissao, ValorTotal, CodigoCliente')
+          .Value(Format('%d, %s, %f, %d ',
+               [FEntity.NumeroPedido,
+                QuotedStr(FormatDateTime('yyyy-mm-dd', FEntity.DataEmissao)),
+                FEntity.ValorTotal,
+                FEntity.CodigoCliente
+               ])
+          )
+        .&End
+        .Insert;
+  Except
+    on E: Exception do
+      raise Exception.Create('Erro ao Inserir o Pedido - ' + E.Message);
+  end;
+end;
+
+function TModelPedido.MaxValueId: Integer;
+begin
+  Result :=
+  TDAOGeneric.New(FDataSet)
+   .SQL
+     .Tabela('Pedido')
+     .Fields('MAX(NumeroPedido) + 1 as ID')
+   .&End
+   .Select
+   .DataSetAsInteger;
+end;
+
+class function TModelPedido.New(aDataSet: IModelDataset): IModelPedido;
+begin
+  Result := Self.Create(aDataSet);
+end;
+
+function TModelPedido.SetParams(aValue: TJSONObject): IModelPedido;
+begin
+  Result := Self;
+  var lPedido := aValue.GetValue<TJSONObject>('Pedido');
+  var lListPedidoProduto := lPedido.GetValue<TJSONArray>('Itens');
+  FEntity
+    .DataEmissao(StrToDate(lPedido.GetValue<string>('dtaemissao')))
+    .CodigoCliente(lPedido.GetValue<Integer>('codigocliente'));
+
+  for var lPedidoProduto in lListPedidoProduto do
+  begin
+    var lEntity := TEntityPedidoProdutos.New;
+    lEntity
+      .IdPedidoProduto(lPedidoProduto.GetValue<Integer>('idpedidoproduto'))
+      .Quantidade(lPedidoProduto.GetValue<Integer>('quantidade'))
+      .ValorUnitario(lPedidoProduto.GetValue<Real>('valorunitario'))
+      .ValorTotal(lPedidoProduto.GetValue<Real>('valortotal'))
+      .CodigoProduto(lPedidoProduto.GetValue<Integer>('codigoproduto'));
+
+    FEntity.ListPedidoProduto.Add(lEntity);
+  end;
+end;
+
+end.

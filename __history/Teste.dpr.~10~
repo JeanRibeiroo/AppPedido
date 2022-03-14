@@ -1,0 +1,23 @@
+program Teste;
+
+{$R *.dres}
+
+uses
+  System.StartUpCopy,
+  FMX.Forms,
+  Pedido in 'src\View\Pedido.pas' {Form1},
+  App.View.Components.ListItens.Item001 in 'src\View\Components\ListItens\App.View.Components.ListItens.Item001.pas',
+  App.View.Components.ListItens.Factory in 'src\View\Components\ListItens\App.View.Components.ListItens.Factory.pas',
+  App.View.Healpers.Img in 'src\View\Healpers\App.View.Healpers.Img.pas',
+  App.Model.Iterator.Interfaces in 'src\Model\Iterator\App.Model.Iterator.Interfaces.pas',
+  App.Model.Iterator.Iterator in 'src\Model\Iterator\App.Model.Iterator.Iterator.pas',
+  App.Model.Entity.Pedido.Pedido in 'src\Model\Entity\Pedido\App.Model.Entity.Pedido.Pedido.pas';
+
+{$R *.res}
+
+begin
+  ReportMemoryLeaksOnShutdown := True;
+  Application.Initialize;
+  Application.CreateForm(TForm1, Form1);
+  Application.Run;
+end.

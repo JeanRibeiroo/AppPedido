@@ -1,0 +1,75 @@
+unit ServidorAPI.Model.Conexao.TableFireDac;
+
+interface
+
+uses ServidorAPI.Model.Conexao.Interfaces, FireDAC.Comp.Client, System.Classes,
+  System.SysUtils;
+
+Type
+  TModelConexaoTable = class(TInterfacedObject, IModelDataSet)
+  private
+    FTable: TFDQuery;
+  public
+    constructor Create(Conexao: IModelConexao);
+    destructor Destroy; override;
+    class function New(Conexao: IModelConexao): IModelDataSet;
+    function Open(ASQL: string): IModelDataSet;
+    function Exec(ASQL: string): IModelDataSet;
+    function &EndDataSet: TComponent;
+  end;
+
+implementation
+
+uses
+  GP1.Utol.LogDebug.Memory, GP1.Util.Exception.Interfaces;
+
+
+{ TModelConexaoTable }
+
+constructor TModelConexaoTable.Create(Conexao: IModelConexao);
+begin
+  TDebuggerHelper.LogDebug('------->Create TModelConexaoTable');
+  FTable := TFDQuery.Create(nil);
+  FTable.Connection := (Conexao.EndConexao as TFDConnection);
+end;
+
+destructor TModelConexaoTable.Destroy;
+begin
+  TDebuggerHelper.LogDebug('------->Destroy TModelConexaoTable');
+  if Assigned(FTable) then
+    FTable.Free;
+  inherited Destroy;
+end;
+
+function TModelConexaoTable.EndDataSet: TComponent;
+begin
+  Result := FTable;
+end;
+
+function TModelConexaoTable.Exec(ASQL: string): IModelDataSet;
+begin
+  TDebuggerHelper.LogDebug('TModelConexaoTable.Exec');
+  Result := Self;
+  FTable.ExecSQL(ASQL);
+  if FTable.RowsAffected < 1 then
+    raise Exception.Create('Não foi possivel Executar esse operação!!');
+end;
+
+class function TModelConexaoTable.New(Conexao: IModelConexao): IModelDataSet;
+begin
+  Result := Self.Create(Conexao);
+
+end;
+
+function TModelConexaoTable.Open(ASQL: string): IModelDataSet;
+begin
+  TDebuggerHelper.LogDebug('TModelConexaoTable.Open');
+  Result := Self;
+  FTable.Open(ASQL);
+  if FTable.RowsAffected < 1 then
+    raise EConsultaVazia.Create('Essa consulta não retornou nenhum registro!!');
+
+end;
+
+
+end.

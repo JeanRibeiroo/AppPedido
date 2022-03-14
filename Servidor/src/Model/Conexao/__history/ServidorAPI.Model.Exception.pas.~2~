@@ -1,0 +1,11 @@
+unit ServidorAPI.Model.Exception;
+
+interface
+
+Type
+
+     EEmpytQuery = class(Exception);
+
+implementation
+
+end.

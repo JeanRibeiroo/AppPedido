@@ -1,0 +1,45 @@
+unit System.DAO.Factory;
+
+interface
+
+uses
+  Grafi.Model.DAO.Interfaces;
+Type
+  TModelDAOFactory = class(TInterfacedObject,IModelDAOFactory)
+    private
+    public
+      constructor Create;
+      destructor  Destroy;override;
+      class function New:IModelDAOFactory;
+      function REST: IModelDAORest;
+  end;
+
+implementation
+
+uses
+  Grafi.Model.DAO.DAORest;
+
+{ TModelDAOFactory<T:IInterface> }
+
+constructor TModelDAOFactory.Create;
+begin
+
+end;
+
+destructor TModelDAOFactory.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TModelDAOFactory.New: IModelDAOFactory;
+begin
+  Result := Self.Create;
+end;
+
+function TModelDAOFactory.REST: IModelDAORest;
+begin
+  Result := TModelDAORest.New;
+end;
+
+end.

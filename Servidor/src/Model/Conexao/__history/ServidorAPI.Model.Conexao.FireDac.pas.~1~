@@ -1,0 +1,153 @@
+unit Servidor.Model.Conexao.FireDac;
+
+interface
+
+uses Servidor.Model.Conexao.Interfaces, System.Classes, FireDac.Comp.Client,
+      FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf,
+      FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Stan.Async,
+      FireDAC.Phys, FireDAC.VCLUI.Wait, FireDAC.Phys.InfxDef, FireDAC.Phys.ODBCBase,
+      FireDAC.Phys.Infx, FireDAC.Comp.UI, Data.DB, FireDAC.Stan.Param, FireDAC.DatS,
+      FireDAC.DApt.Intf, FireDAC.DApt, FireDAC.Phys.MySQL, FireDAC.Phys.MySQLDef;
+
+Type
+  TModelConexaoFireDac = class(TInterfacedObject, IModelConexao,
+    IModelConexaoParametros)
+  private
+    FConn: TFDconnection;
+    FDPhysMySQLDriverLink1: TFDPhysMySQLDriverLink;
+    FDGUIxWaitCursor1: TFDGUIxWaitCursor;
+    FDataBase: string;
+    FUserName: string;
+    FPassoWord: string;
+    FDriveId: string;
+    FServer: string;
+    FDriverLink: string;
+    FPorta: Integer;
+    procedure LerParametros;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    class function New: IModelConexao;
+
+    function &EndConexao: TComponent;
+    function DataBase(Value: string): IModelConexaoParametros;
+    function UserName(Value: string): IModelConexaoParametros;
+    function PassoWord(Value: string): IModelConexaoParametros;
+    function DriveId(Value: string): IModelConexaoParametros;
+    function Server(Value: string): IModelConexaoParametros;
+    function DriverLink(Value: string): IModelConexaoParametros;
+    function Porta(Value: Integer): IModelConexaoParametros;
+    function &EndConexaoParametros: IModelConexao;
+    function ConexaoParametros: IModelConexaoParametros;
+    function Conectar: IModelConexao;
+  end;
+
+implementation
+
+uses
+  System.SysUtils;
+
+{ TModelConexaoFireDac }
+
+function TModelConexaoFireDac.&EndConexao: TComponent;
+begin
+  Result := FConn;
+end;
+
+function TModelConexaoFireDac.EndConexaoParametros: IModelConexao;
+begin
+  Result := Self;
+end;
+
+procedure TModelConexaoFireDac.LerParametros;
+begin
+   FConn.Params.Add('Database='+ FDataBase);
+   FConn.Params.Add('User_Name=' + FUserName);
+   FConn.Params.Add('Password=' + FPassoWord);
+   FConn.Params.Add('Server=' + FServer);
+   FConn.Params.Add('DriverID=' + FDriveId);
+   FConn.Params.Add('PORT=' + IntToStr(FPorta));
+   FConn.LoginPrompt := False;
+   FDPhysMySQLDriverLink1.VendorLib := FDriverLink;
+end;
+
+function TModelConexaoFireDac.Conectar: IModelConexao;
+begin
+  Result := Self;
+  LerParametros;
+  try
+    FConn.Connected := True;
+  Except
+     on E: Exception do
+      Exception.Create('Não foi possivel conectar no Banco ' + E.Message);
+  end;
+end;
+
+function TModelConexaoFireDac.ConexaoParametros: IModelConexaoParametros;
+begin
+  Result := Self;
+end;
+
+constructor TModelConexaoFireDac.Create;
+begin
+  FConn := TFDconnection.Create(nil);
+  FDPhysMySQLDriverLink1 := TFDPhysMySQLDriverLink.Create(nil);
+  FDGUIxWaitCursor1 := TFDGUIxWaitCursor.Create(nil);
+end;
+
+function TModelConexaoFireDac.DataBase(Value: string): IModelConexaoParametros;
+begin
+  Result := Self;
+  FDataBase := Value;
+end;
+
+destructor TModelConexaoFireDac.Destroy;
+begin
+  FreeAndNil(FConn);
+  FreeAndNil(FDPhysMySQLDriverLink1);
+  FreeAndNil(FDGUIxWaitCursor1);
+  inherited;
+end;
+
+function TModelConexaoFireDac.DriveId(Value: string): IModelConexaoParametros;
+begin
+  Result := Self;
+  FDriveId := Value;
+end;
+
+function TModelConexaoFireDac.DriverLink(Value: string): IModelConexaoParametros;
+begin
+  Result := Self;
+  FDriverLink := Value;
+end;
+
+class function TModelConexaoFireDac.New: IModelConexao;
+begin
+  Result := Self.Create;
+end;
+
+function TModelConexaoFireDac.PassoWord(Value: string): IModelConexaoParametros;
+begin
+  Result := Self;
+  FPassoWord := Value;
+end;
+
+function TModelConexaoFireDac.Porta(Value: Integer): IModelConexaoParametros;
+begin
+  Result := Self;
+  FPorta := Value;
+end;
+
+function TModelConexaoFireDac.Server(Value: string): IModelConexaoParametros;
+begin
+  Result := Self;
+  FServer := Value;
+end;
+
+function TModelConexaoFireDac.UserName(Value: string): IModelConexaoParametros;
+begin
+  Result := Self;
+  FUserName := Value;
+end;
+
+end.

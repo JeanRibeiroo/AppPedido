@@ -1,0 +1,14 @@
+unit ServerApp.Controller.Pedido.Pedido;
+
+interface
+
+Type
+
+  IModelPedido = Interface
+    ['{12E8CE4E-D43D-4CBD-B234-19840204C205}']
+    function Get: IModelPedido;
+  End;
+
+implementation
+
+end.

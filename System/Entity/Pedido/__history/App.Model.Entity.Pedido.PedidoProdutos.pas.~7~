@@ -1,0 +1,142 @@
+unit App.Model.Entity.Pedido.PedidoProdutos;
+
+interface
+
+
+Type
+
+  IEntityPedidoProdutos = Interface
+    ['{AEB3C662-FE66-4B69-9B0D-082C18914777}']
+    function IdPedidoProduto(aValue: Integer): IEntityPedidoProdutos; overload;
+    function IdPedidoProduto: Integer; overload;
+    function NumeroPedido(aValue: Integer): IEntityPedidoProdutos; overload;
+    function NumeroPedido: Integer; overload;
+    function CodigoProduto(aValue: Integer): IEntityPedidoProdutos; overload;
+    function CodigoProduto: Integer; overload;
+    function Quantidade(aValue: Integer): IEntityPedidoProdutos; overload;
+    function Quantidade: Integer; overload;
+    function ValorUnitario(aValue: Currency): IEntityPedidoProdutos; overload;
+    function ValorUnitario: Currency; overload;
+    function ValorTotal(aValue: Currency): IEntityPedidoProdutos; overload;
+    function ValorTotal: Currency; overload;
+  End;
+
+  TEntityPedidoProdutos = class(TInterfacedObject, IEntityPedidoProdutos)
+    private
+       FIdPedidoProduto: Integer;
+       FNumeroPedido: Integer;
+       FCodigoProduto: Integer;
+       FQuantidade: Integer;
+       FValorUnitario: Currency;
+       FValorTotal: Currency;
+    public
+      constructor Create;
+      destructor Destroy; override;
+      class function New: IEntityPedidoProdutos;
+      function IdPedidoProduto(aValue: Integer): IEntityPedidoProdutos; overload;
+      function IdPedidoProduto: Integer; overload;
+      function NumeroPedido(aValue: Integer): IEntityPedidoProdutos; overload;
+      function NumeroPedido: Integer; overload;
+      function CodigoProduto(aValue: Integer): IEntityPedidoProdutos; overload;
+      function CodigoProduto: Integer; overload;
+      function Quantidade(aValue: Integer): IEntityPedidoProdutos; overload;
+      function Quantidade: Integer; overload;
+      function ValorUnitario(aValue: Currency): IEntityPedidoProdutos; overload;
+      function ValorUnitario: Currency; overload;
+      function ValorTotal(aValue: Currency): IEntityPedidoProdutos; overload;
+      function ValorTotal: Currency; overload;
+  end;
+
+implementation
+
+{ TEntityPedidoProdutos }
+
+function TEntityPedidoProdutos.CodigoProduto(
+  aValue: Integer): IEntityPedidoProdutos;
+begin
+  Result := Self;
+  FCodigoProduto := aValue;
+end;
+
+function TEntityPedidoProdutos.CodigoProduto: Integer;
+begin
+  Result := FCodigoProduto;
+end;
+
+constructor TEntityPedidoProdutos.Create;
+begin
+
+end;
+
+destructor TEntityPedidoProdutos.Destroy;
+begin
+
+  inherited;
+end;
+
+function TEntityPedidoProdutos.IdPedidoProduto(
+  aValue: Integer): IEntityPedidoProdutos;
+begin
+  Result := Self;
+  FIdPedidoProduto := aValue;
+end;
+
+function TEntityPedidoProdutos.IdPedidoProduto: Integer;
+begin
+  Result := FIdPedidoProduto;
+end;
+
+class function TEntityPedidoProdutos.New: IEntityPedidoProdutos;
+begin
+  Result := Self.Create;
+end;
+
+function TEntityPedidoProdutos.NumeroPedido(
+  aValue: Integer): IEntityPedidoProdutos;
+begin
+  Result := Self;
+  FNumeroPedido := aValue;
+end;
+
+function TEntityPedidoProdutos.NumeroPedido: Integer;
+begin
+  Result := FNumeroPedido;
+end;
+
+function TEntityPedidoProdutos.Quantidade(
+  aValue: Integer): IEntityPedidoProdutos;
+begin
+  Result := Self;
+  FQuantidade := aValue;
+end;
+
+function TEntityPedidoProdutos.Quantidade: Integer;
+begin
+  Result := FQuantidade;
+end;
+
+function TEntityPedidoProdutos.ValorTotal: Currency;
+begin
+  Result := FValorTotal;
+end;
+
+function TEntityPedidoProdutos.ValorTotal(
+  aValue: Currency): IEntityPedidoProdutos;
+begin
+  Result := Self;
+  FValorTotal := aValue;
+end;
+
+function TEntityPedidoProdutos.ValorUnitario: Currency;
+begin
+  Result := FValorUnitario;
+end;
+
+function TEntityPedidoProdutos.ValorUnitario(
+  aValue: Currency): IEntityPedidoProdutos;
+begin
+  Result := Self;
+  FValorUnitario := aValue;
+end;
+
+end.

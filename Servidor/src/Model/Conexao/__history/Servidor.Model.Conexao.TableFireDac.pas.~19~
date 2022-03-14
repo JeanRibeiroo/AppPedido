@@ -1,0 +1,69 @@
+unit Servidor.Model.Conexao.TableFireDac;
+
+interface
+
+uses Servidor.Model.Conexao.Interfaces, FireDAC.Comp.Client, System.Classes,
+  System.SysUtils;
+
+Type
+  TModelConexaoTable = class(TInterfacedObject, IModelDataSet)
+  private
+    FTable: TFDQuery;
+    FResult: IModelResultDataSet;
+  public
+    constructor Create(Conexao: IModelConexao);
+    destructor Destroy; override;
+    class function New(Conexao: IModelConexao): IModelDataSet;
+    function Open(ASQL: string): IModelDataSet;
+    function Exec(ASQL: string): IModelDataSet;
+    function Result: IModelResultDataSet;
+    function &EndDataSet: TComponent;
+  end;
+
+implementation
+
+
+{ TModelConexaoTable }
+
+constructor TModelConexaoTable.Create(Conexao: IModelConexao);
+begin
+  FTable := TFDQuery.Create(nil);
+  FTable.Connection := (Conexao.EndConexao as TFDConnection);
+end;
+
+destructor TModelConexaoTable.Destroy;
+begin
+  FreeAndNil(FTable);
+  inherited;
+end;
+
+function TModelConexaoTable.EndDataSet: TComponent;
+begin
+  Result := FTable;
+end;
+
+function TModelConexaoTable.Exec(ASQL: string): IModelDataSet;
+begin
+  Result := Self;
+  FTable.ExecSQL(ASQL);
+end;
+
+class function TModelConexaoTable.New(Conexao: IModelConexao): IModelDataSet;
+begin
+  Result := Self.Create(Conexao);
+
+end;
+
+function TModelConexaoTable.Open(ASQL: string): IModelDataSet;
+begin
+  Result := Self;
+  FTable.Open(ASQL);
+
+end;
+
+function TModelConexaoTable.Result: IModelResultDataSet;
+begin
+  Result := FResult;
+end;
+
+end.

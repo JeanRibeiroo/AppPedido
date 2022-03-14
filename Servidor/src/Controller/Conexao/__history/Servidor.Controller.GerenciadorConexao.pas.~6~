@@ -1,0 +1,53 @@
+unit Servidor.Controller.GerenciadorConexao;
+
+interface
+
+uses
+  Servidor.Controller.Conexao.Interfaces, Servidor.Model.Conexao.Interfaces,
+  System.Generics.Collections,Datasnap.DSSession;
+
+Type
+  TControllerGerenciadorConexao = class(TInterfacedObject,IControllerGerenciamentoConexao)
+  private
+     FListofConnection : TDictionary<Integer,IModelConexao>;
+
+  public
+    constructor Create;
+    destructor  Destroy;override;
+    class function New: IControllerGerenciamentoConexao;
+    function GetConnection:IModelConexao;
+  end;
+
+implementation
+
+{ TControllerGerenciadorConexao }
+
+constructor TControllerGerenciadorConexao.Create;
+begin
+   FListofConnection := TDictionary<Integer,IModelConexao>.Create;
+end;
+
+destructor TControllerGerenciadorConexao.Destroy;
+begin
+
+  inherited;
+end;
+
+function TControllerGerenciadorConexao.GetConnection: IModelConexao;
+begin
+  if FListofConnection.ContainsKey(TDSSessionManager.GetThreadSession.Id) then
+     Result := FListofConnection[TDSSessionManager.GetThreadSession.Id]
+  else
+  begin
+
+    FListofConnection.Add(TDSSessionManager.GetThreadSession.Id, dbconn);
+    Result := dbconn;
+  end; 0
+end;
+
+class function TControllerGerenciadorConexao.New: IControllerGerenciamentoConexao;
+begin
+  Result := Self.Create;
+end;
+
+end.

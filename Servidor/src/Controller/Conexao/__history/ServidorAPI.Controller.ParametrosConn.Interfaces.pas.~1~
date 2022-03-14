@@ -1,0 +1,17 @@
+unit Servidor.Controller.ParametrosSistema.Interfaces;
+
+interface
+
+uses
+  Servidor.Model.ParametrosSistema.ParametrosConn.Interfaces;
+
+Type
+
+  IParametrosSistema = Interface
+    ['{45891723-9868-414D-8A8D-07C771B460E1}']
+    function Conn:IConn;
+  End;
+
+implementation
+
+end.

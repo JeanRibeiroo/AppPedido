@@ -1,0 +1,20 @@
+unit App.View.Components.ListItens.Factory;
+
+interface
+
+uses
+  FMX.Types,
+  App.View.Components.ListItens.Item001,
+  System.Classes;
+
+Type
+
+   IComponentsListItensFactory = Interface
+    ['{FCDB1BE1-6A4E-4855-ADB7-31E6372E528C}']
+    function Container(aValue : TFmxObject ) : IComponentsListItensFactory;
+    function ListItem001( aOwner : Tcomponent ) : IComponents<TItem001>;
+  End;
+
+implementation
+
+end.

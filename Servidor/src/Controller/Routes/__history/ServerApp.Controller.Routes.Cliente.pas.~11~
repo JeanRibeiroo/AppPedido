@@ -1,0 +1,49 @@
+unit ServerApp.Controller.Routes.Cliente;
+
+interface
+
+uses
+  Horse.HTTP;
+
+
+procedure DoGetById(Req: THorseRequest; Res: THorseResponse);
+
+
+procedure Registry;
+
+implementation
+
+uses
+  System.JSON,
+  BackEnd.Controller.DAO.DAO;
+
+
+
+procedure DoGetById(Req: THorseRequest; Res: THorseResponse);
+begin
+  Res.Send<TJSONObject>(
+    TControllerDAO.New
+       .Model
+           .SQL
+             .Tabela('Cliente')
+             .Fields('l.idLOgradouro, l.CEP, l.Tipo, l.Descricao, l.Complemento, l.Descricao_sem_numero, ' +
+                   'l.Descricao_bairro, l.cidade_idcidade, c.idcidade, c.Descricao, c.UF, c.Codigo_ibge, c.ddd' )
+             .Where('AND l.cidade_idcidade = c.idcidade ' +
+                    'AND  = ' + Req.Params['IdEndereco'] )
+           .&End
+           .Select
+           .DataSetAsJsonObject
+    );
+end;
+
+procedure DoGet(Req: THorseRequest; Res: THorseResponse);
+begin
+
+end;
+
+procedure Registry;
+begin
+
+end;
+
+end.

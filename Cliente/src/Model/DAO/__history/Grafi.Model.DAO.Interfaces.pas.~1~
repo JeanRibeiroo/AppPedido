@@ -1,0 +1,61 @@
+unit Grafi.Model.DAO.Interfaces;
+
+interface
+
+uses
+  System.JSON,
+  Data.DB,
+  FireDAC.Comp.Client,
+  System.Classes;
+
+Type
+  IModelDAO = Interface
+    ['{351AA552-0681-43D4-BB6F-E8CCEE2C38E2}']
+    function BaseURL(aValue: string): IModelDAO;
+    function Resource(aValue: string): IModelDAO;
+    function AddBody(aValue: TJsonObject): IModelDAO;
+    function Listar: TJSONValue;
+    function ListDataSet(aValue: TFDMemTable): IModelDAO;
+    function Incluir: TJSONValue;
+    function Alterar: TJSONValue;
+    function Excluir: IModelDAO;
+  End;
+
+  IDAORest = Interface
+    ['{5B3E9667-D1C3-4654-98B3-C528CAB1A7DF}']
+    function BaseURL(aValue: string): IDAORest;
+    function Resource(aValue: string): IDAORest;
+    function Accept(aValue: string): IDAORest;
+    function ContentType(aValue: string): IDAORest;
+    function AddQueryParams(aParams, aValue: string): IDAORest;
+    function AddBody(aValue: TJSONObject): IDAORest; overload;
+    function AddBody(aValue: TStream): IDAORest; overload;
+    function BeginParams : IDAORest;
+    function AddParams(aParams, aValue: string): IDAORest;  overload;
+    function AddParams(aParams: string; aValue: Integer): IDAORest; overload;
+    function EndParams: IDAORest;
+    function AddToken(aValue: string) : IDAORest;
+    function AddFile(const AName: string; const AValue: TStream): IDAORest;
+    function Select: IDAORest;
+    function Post: IDAORest;
+    function Put: IDAORest;
+    function Delete: IDAORest;
+    function ToInt: Integer;
+    function ToJsonObject: TJSONObject;
+    function ToJsonArray: TJSONArray;
+    function ToJsonDataPaginateArray : TJSONArray; overload;
+    function ToJsonDataPaginateArray(out aRec : Integer) : TJSONArray; overload;
+    function ToDataSet: TDataSet;
+    function ToStream : TStream;
+  End;
+
+  IModelDAOFactory =  Interface
+    ['{B614192B-66BD-4224-9D50-1C6D3E33661B}']
+    function REST: IModelDAO;
+  End;
+
+implementation
+
+end.
+
+

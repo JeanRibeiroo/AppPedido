@@ -1,0 +1,49 @@
+unit ServidorAPI.Controller.Conexao.Facade;
+
+interface
+
+uses
+  ServidorAPI.Controller.Conexao.Interfaces,
+  ServidorAPI.Model.Conexao.Interfaces;
+
+Type
+  TControllerConexoesFacade = class(TInterfacedObject,IControllerConexaoFacade)
+    private
+      FConexao: IModelConexao;
+    public
+      constructor Create;
+      destructor  Destroy;override;
+      class function New:IControllerConexaoFacade;
+      function Conexao:IControllerConexao;
+  end;
+
+implementation
+
+uses
+  ServidorAPI.Controller.Conexao.Factory.Conexoes,
+  ServidorAPI.Controller.Conexao.Factory.DataSet;
+
+{ TControllerConexoesFacade }
+
+function TControllerConexoesFacade.Conexao: IControllerConexao;
+begin
+  Result :=  TControllerConexaoFactoryConexoes.New.Conexao;
+end;
+
+constructor TControllerConexoesFacade.Create;
+begin
+
+end;
+
+destructor TControllerConexoesFacade.Destroy;
+begin
+
+  inherited;
+end;
+
+class function TControllerConexoesFacade.New: IControllerConexaoFacade;
+begin
+  Result := Self.Create
+end;
+
+end.

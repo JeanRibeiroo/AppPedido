@@ -1,0 +1,106 @@
+unit Iterator.Iterator;
+
+
+interface
+
+uses
+  System.Generics.Collections,
+  Iterator.Interfaces;
+
+Type
+  TModelIterator<T> = class(TInterfacedObject,IModelIterator<T>)
+    private
+      FLista : TList<T>;
+      FCount:Integer;
+    public
+      constructor Create;
+      destructor  Destroy;override;
+      class function New:IModelIterator<T>;
+      function HasNext:Boolean;
+      function Firt:IModelIterator<T>;
+      function Next:T;
+      function Add(Value:T):IModelIterator<T>;
+      function Itens:T;
+      function Count:Integer;
+      function ItemIndex:Integer;
+      function Delete(aIndex: Integer): IModelIterator<T>;
+      function Clear: IModelIterator<T>;
+  end;
+
+implementation
+
+
+{ TModelIterator<T> }
+
+function TModelIterator<T>.Add(Value: T): IModelIterator<T>;
+begin
+  Result := Self;
+  FLista.Add(Value);
+  FCount := 0;
+end;
+
+function TModelIterator<T>.Count: Integer;
+begin
+  Result := Pred(FLista.Count);
+end;
+
+constructor TModelIterator<T>.Create;
+begin
+  FLista := TList<T>.Create;
+  FCount := 0;
+end;
+
+function TModelIterator<T>.Delete(
+  aIndex: Integer): IModelIterator<T>;
+begin
+  Result := self;
+  FLista.Delete(aIndex);
+  FCount := -1;
+end;
+
+function TModelIterator<T>.Clear: IModelIterator<T>;
+begin
+  Result := Self;
+  FLista.Clear;
+  FCount := 0;
+end;
+
+destructor TModelIterator<T>.Destroy;
+begin
+  FLista.Free;
+  inherited;
+end;
+
+function TModelIterator<T>.Firt: IModelIterator<T>;
+begin
+  Result := self;
+  FCount := 0;
+end;
+
+function TModelIterator<T>.HasNext: Boolean;
+begin
+  Result := not (FCount = FLista.Count);
+end;
+
+function TModelIterator<T>.ItemIndex: Integer;
+begin
+  Result := FCount;
+end;
+
+function TModelIterator<T>.Itens: T;
+begin
+  Result := FLista[FCount];
+end;
+
+class function TModelIterator<T>.New: IModelIterator<T>;
+begin
+  Result := Self.Create;
+end;
+
+function TModelIterator<T>.Next: T;
+begin
+  Result := FLista[FCount];
+  Inc(FCount);
+end;
+
+end.

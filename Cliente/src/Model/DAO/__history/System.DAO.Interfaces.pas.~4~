@@ -1,0 +1,54 @@
+unit System.DAO.Interfaces;
+
+interface
+
+uses
+  System.JSON,
+  Data.DB,
+  System.Classes,
+  System.Generics.Collections,
+  System.Model.DAO.Params,
+  FireDAC.Comp.Client;
+
+Type
+  IDAORest = Interface
+    ['{5B3E9667-D1C3-4654-98B3-C528CAB1A7DF}']
+    function BaseURL(aValue: string): IDAORest;
+    function Resource(aValue: string): IDAORest;
+    function Accept(aValue: string): IDAORest;
+    function ContentType(aValue: string): IDAORest;
+    function AddQueryParams(aParams, aValue: string): IDAORest; overload;
+    function AddQueryParams(aValue: IParams): IDAORest; overload;
+    function AddBody(aValue: TJSONObject): IDAORest; overload;
+    function AddBody(aValue: TStream): IDAORest; overload;
+    function Params(aValue: IParams): IDAORest;
+    function BeginParams : IDAORest;
+    function AddParams(aParams, aValue: string): IDAORest;  overload;
+    function AddParams(aParams: string; aValue: Integer): IDAORest; overload;
+    function EndParams: IDAORest;
+    function AddToken(aValue: string) : IDAORest;
+    function AddFile(const AName: string; const AValue: TStream): IDAORest;
+    function Select: IDAORest;
+    function Post: IDAORest;
+    function Put: IDAORest;
+    function Delete: IDAORest;
+    function ToInt: Integer;
+    function ToJsonObject: TJSONObject;
+    function ToJsonArray: TJSONArray;
+    function ToJsonDataPaginateArray : TJSONArray; overload;
+    function ToJsonDataPaginateArray(out aRec : Integer) : TJSONArray; overload;
+    function ToDataSet: TFDMemTable;
+    function ToStream : TStream;
+  End;
+
+  IModelDAOFactory =  Interface
+    ['{B614192B-66BD-4224-9D50-1C6D3E33661B}']
+    function REST: IDAORest;
+    function Params: IParams;
+  End;
+
+implementation
+
+end.
+
+

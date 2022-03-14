@@ -1,0 +1,86 @@
+unit ServerApp.Controller.Routes.Pedido;
+
+
+
+interface
+
+uses
+  Horse.HTTP,
+  ServerApp.Model.Pedido.Pedido;
+
+
+procedure DoGetById(Req: THorseRequest; Res: THorseResponse);
+procedure DoInsert(Req: THorseRequest);
+
+
+procedure Registry;
+
+implementation
+
+uses
+  Horse,
+  System.JSON,
+  System.SysUtils,
+  System.Command.Invoker,
+  BackEnd.Controller.DAO.DAO,
+  ServerApp.Model.Cliente.Cliente,
+  ServerApp.Model.Pedido.PedidoProduto,
+  ServerApp.Model.Pedido.Command.Factory;
+
+
+procedure DoGetById(Req: THorseRequest; Res: THorseResponse);
+begin
+  var lDAO :=  TControllerDAO.New;
+  var lJson := TJSONObject.Create;
+  var lJsonPedido := TModelPedido.New(lDAO.DataSet).Get(Req.Params['IdNumeroPedido'].ToInteger);
+  var lJsonCliente := TModelCliente.New(lDAO.DataSet).Get(lJsonPedido.GetValue<Integer>('codigocliente'));
+  var lJsonPedidoProduto := TModelPedidoProduto.New(lDAO.DataSet).GetList(Req.Params['IdNumeroPedido'].ToInteger);
+
+  lJson.AddPair('Pedido', lJsonPedido);
+  lJsonPedido.AddPair('Cliente', lJsonCliente);
+  lJsonPedido.AddPair('Itens', lJsonPedidoProduto);
+
+  Res.Send<TJSONObject>(lJson);
+end;
+
+procedure DoInsert(Req: THorseRequest);
+begin
+   var lBody := TJSONObject.ParseJSONValue(Req.Body) as TJSONObject;
+   var lDAO :=  TControllerDAO.New;
+   var lPedido := TModelPedido.New(lDAO.DataSet).SetParams(lBody);
+
+    try
+    LDAO.StartTransaction;
+
+    try
+      TInvoker.New
+        .Add(TModelPedidoCommandFactory.New(lPedido).GetNumeroPedido)
+        .Add(TModelPedidoCommandFactory.New(lPedido).NewPedido)
+        //.Add(TModelPedidoCommandFactory.New(lPedido).NewPedidoProduto)
+        .Execute;
+
+      LDAO.Commit;
+
+    Except
+      on E: Exception do
+      begin
+         LDAO.Rollback;
+         raise Exception.Create('Não foi possivel Salvar o Pedido - ' + E.Message);
+      end;
+    end;
+  finally
+    LBody.Free;
+  end;
+
+end;
+
+procedure Registry;
+begin
+   THorse
+    .Get('/pedidos/:IdNumeroPedido',DoGetById)
+    .Post('/pedidos', DoInsert);
+end;
+
+end.
+
+
